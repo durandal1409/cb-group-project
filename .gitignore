@@ -29,3 +29,6 @@ server/.yarn/
 server/.yarnrc.yml
 client/.yarnrc.yml
 client/.yarn/
+
+**/yarn.lock
+**/package-lock.json
