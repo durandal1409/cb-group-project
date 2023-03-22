@@ -1,25 +1,38 @@
 import { useState, useEffect } from "react";
-import GlobalStyle from "./globalStyles";
+import GlobalStyles from "./GlobalStyles";
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Header from './Header';
+import Footer from './Footer';
+import Home from "./Home";
+import Item from "./Item";
+import Profile from "./Profile";
+import Cart from "./Cart";
+import Confirmation from "./Confirmation";
 
 function App() {
-  const [itemCategory, setItemCategory] = useState(null);
+  // const [itemsCategory, setItemsCategory] = useState(null);
 
-  useEffect(() => {
-    fetch("/")
-      .then((res) => res.json())
-      .then((data) => setBacon(data));
-  }, []);
+  // useEffect(() => {
+  //   fetch("/")
+  //     .then((res) => res.json())
+  //     .then((data) => setBacon(data));
+  // }, []);
 
   return (
     <div className="App">
       <BrowserRouter>
-        <GlobalStyle />
+        <GlobalStyles />
         <Header />
         <Routes>
-          <Route path="/" element={<div>message</div>} />
+          <Route path="/" element={<Home />} />
+          <Route path="/item/:itemId" element={<Item />} />
+          <Route path="/company-profile/:companyId" element={<Profile />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/confirmation" element={<Confirmation />} />
+          <Route path="*" element={<h1>404: Oops!</h1>} />
         </Routes>
+        <Footer />
       </BrowserRouter>
     </div>
   );
