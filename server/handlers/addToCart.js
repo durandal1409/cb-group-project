@@ -80,6 +80,7 @@ const addToCart = async (req,res) => {
     res.status(500).json({ status: 500, data: req.body, message: err.message });
   }
 
+  
 };
 
 module.exports = {addToCart};
