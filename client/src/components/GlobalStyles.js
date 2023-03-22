@@ -3,8 +3,10 @@ export default createGlobalStyle`
   :root {
     --color-blackfont-titles: #202324;
     --color-blackfont-text:#000000;
-
- 
+    --color-background:#F5F5F5;
+    --Font-heading-title:"Teko","sans-serif";
+    --font-text:"Cormorant Garamond", "sans-serif"; 
+    
   }
 html, body, div, span,  object, iframe,
 h1, h2, h3, h4, h5, h6, p,

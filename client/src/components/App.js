@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import GlobalStyle from "./globalStyles";
+import GlobalStyles from "./GlobalStyles";
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Header from "./Header";
 
 function App() {
   const [itemCategory, setItemCategory] = useState(null);
@@ -9,13 +10,13 @@ function App() {
   useEffect(() => {
     fetch("/")
       .then((res) => res.json())
-      .then((data) => setBacon(data));
+      .then((data) => setItemCategory(data));
   }, []);
 
   return (
     <div className="App">
       <BrowserRouter>
-        <GlobalStyle />
+        <GlobalStyles />
         <Header />
         <Routes>
           <Route path="/" element={<div>message</div>} />
