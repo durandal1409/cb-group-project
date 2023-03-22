@@ -21,7 +21,7 @@ const addToCart = async (req,res) => {
   const _id = parseInt(unparsedId);
   let unparsedNumToBuy = req.body.numToBuy;
   let numToBuy = parseInt(unparsedNumToBuy);
-  const userEmail = "JimmyBuyMore@realcustomer.ca";
+  const userEmail = "JimmyBuyMore@realcustomer.ca"; 
 
 
   let newSet = {$set:{_id, numToBuy, userEmail}};
@@ -32,26 +32,34 @@ const addToCart = async (req,res) => {
 
     //these variables find the stock value of the item according to its ID
     const stockAmount = await db.collection("Items").find({_id: _id}).project({"_id":0, "name":0, "price":0, "body_location":0, "category":0, "imageSrc":0,"companyId":0}).toArray();
-    const stockParsed = stockAmount[0].numInStock;
 
     //these variables find if there is already a same _id value in the cart
     const idExists = await db.collection("Cart").find({_id: _id}).project({"numToBuy":0, "userEmail":0}).toArray();
-    const idExistsParsed = idExists[0]._id;
 
     //these variables find the number to buy value from items in the cart
     const cartNumToBuy = await db.collection("Cart").find({_id: _id}).project({"_id":0, "userEmail":0}).toArray();
-    const cartNumParsed = cartNumToBuy[0].numToBuy;
 
+
+  
     //before adding the items to the cart collection, we need to check if we have enough inventory to supply the request
     if(isNaN(numToBuy) === true){
       res.status(500).json({ status: 500, data: {unparsedId, unparsedNumToBuy}, message: "Make sure the requested amount is a number" });
     }
-
-    else if(numToBuy > stockParsed || (stockParsed - numToBuy) < 0 ){
-      res.status(500).json({ status: 500, data: {Buying : numToBuy, Stock: stockParsed}, message: "The stock is too low to accomodate this request" });
+    //checking if the item ID returns an item or not
+    else if (stockAmount.length === 0) {
+      res.status(500).json({ status: 500, data: {itemId: unparsedId}, message: "Make sure the item ID is correct!" });
+    }
+    //checking if the stock is lower than the asked amount
+    else if(numToBuy > stockAmount[0].numInStock || (stockAmount[0].numInStock - numToBuy) < 0 ){
+      res.status(500).json({ status: 500, data: {Buying : numToBuy, Stock: stockAmount[0].numInStock}, message: "The stock is too low to accomodate this request" });
     }
     //we also check if the item exists already in the cart. if it does, we simply update the quantity while checking it does not exceed the total stock
-    else if(idExistsParsed === _id){
+    else if(idExists.length > 0 ){
+
+      const stockParsed = stockAmount[0].numInStock;
+      const idExistsParsed = idExists[0]._id;
+      const cartNumParsed = cartNumToBuy[0].numToBuy;
+
       if((stockParsed-numToBuy-cartNumParsed) < 0){
         res.status(500).json({ status: 500, data: {InCart: cartNumParsed, Buying : numToBuy, Stock: stockParsed}, message: "The stock is too low to accomodate this request" });
       }
@@ -72,6 +80,7 @@ const addToCart = async (req,res) => {
     res.status(500).json({ status: 500, data: req.body, message: err.message });
   }
 
+  
 };
 
 module.exports = {addToCart};
