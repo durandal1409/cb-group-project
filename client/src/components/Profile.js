@@ -11,13 +11,25 @@ const Profile = () => {
     useEffect(() => {
         fetch(`/api/get-company/${companyId}`)
         .then(res => res.json())
-        .then(data => setCompanyData(data.data));
+        .then(data => {
+            if (data.status !== 200) {
+                window.alert(data.message);
+                throw new Error(data.message);
+            }
+            setCompanyData(data.data)
+        });
     }, []);
 
     useEffect(() => {
         fetch(`/api/get-company-items/${companyId}`)
         .then(res => res.json())
-        .then(data => setItems(data.data));
+        .then(data => {
+            if (data.status !== 200) {
+                window.alert(data.message);
+                throw new Error(data.message);
+            }
+            setItems(data.data)
+        });
     }, []);
 
     // console.log("company: ", companyData);
