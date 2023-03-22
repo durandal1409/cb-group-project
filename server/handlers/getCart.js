@@ -23,10 +23,11 @@ const getCart = async (req,res) => {
     const db = client.db("GroupProject");
     const result = await db.collection("Cart").find({userEmail: query}).toArray()
 
-
+    // if the request turns an empty array, it is presumed that the user in the params does not have a cart
     if(result.length === 0){
       res.status(500).json({ status: 500, data: query, message: "This user does not currently have a cart" });
     }
+    //else all their items are returned
     else{
       res.status(200).json({ status: 200, data: result, message: `Cart list for user ${query} found!` });
     }
