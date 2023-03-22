@@ -29,3 +29,5 @@ server/.yarn/
 server/.yarnrc.yml
 client/.yarnrc.yml
 client/.yarn/
+client/yarn.lock
+client/yarn.lock
