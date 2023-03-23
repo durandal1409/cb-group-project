@@ -3,13 +3,14 @@ import GlobalStyles from "./GlobalStyles";
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Header from './Header';
-import Footer from './Footer';
+import Header from "./Header";
+import Footer from "./Footer";
 import Home from "./Home";
 import Item from "./Item";
 import Profile from "./Profile";
 import Cart from "./Cart";
 import Confirmation from "./Confirmation";
+import Category from "./Category";
 
 function App() {
   // const [itemsCategory, setItemsCategory] = useState(null);
@@ -28,9 +29,10 @@ function App() {
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/item/:itemId" element={<Item userId={userId}/>} />
+          <Route path="/item/:itemId" element={<Item userId={userId} />} />
+          <Route path="`/category/:category`" element={<Category />} />
           <Route path="/company-profile/:companyId" element={<Profile />} />
-          <Route path="/cart" element={<Cart userId={userId}/>} />
+          <Route path="/cart" element={<Cart userId={userId} />} />
           <Route path="/confirmation" element={<Confirmation />} />
           <Route path="*" element={<h1>404: Oops!</h1>} />
         </Routes>
