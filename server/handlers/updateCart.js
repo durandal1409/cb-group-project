@@ -16,27 +16,28 @@ const updateCart = async (req,res) => {
   const client = new MongoClient(MONGO_URI,options);
 
   //since the database uses ints and we might use strings elsewhere, the numbers are all parsed before being used
-  const unparsedId = req.body._id;
-  const _id = parseInt(unparsedId);
+  const _id = req.body._id;
+  const unparsedId = req.body.itemId;
+  const itemId = parseInt(unparsedId);
   let unparsedNumToBuy = req.body.numToBuy;
   let numToBuy = parseInt(unparsedNumToBuy);
   const userEmail = "JimmyBuyMore@realcustomer.ca"; 
 
 
-  let newSet = {$set:{_id, numToBuy, userEmail}};
+  let newSet = {$set:{_id, itemId, numToBuy, userEmail}};
 
   try{
     await client.connect();
     const db = client.db("GroupProject");
 
     //these variables find the stock value of the item according to its ID
-    const stockAmount = await db.collection("Items").find({_id: _id}).project({"_id":0, "name":0, "price":0, "body_location":0, "category":0, "imageSrc":0,"companyId":0}).toArray();
+    const stockAmount = await db.collection("Items").find({_id: itemId}).project({"_id":0, "name":0, "price":0, "body_location":0, "category":0, "imageSrc":0,"companyId":0}).toArray();
 
-    //these variables find if there is already a same _id value in the cart
-    const idExists = await db.collection("Cart").find({_id: _id}).project({"numToBuy":0, "userEmail":0}).toArray();
+    //these variables find if there is already a same itemId value in the cart
+    const idExists = await db.collection("Cart").find({itemId: itemId, userEmail: userEmail}).project({"numToBuy":0}).toArray();
 
     //these variables find the number to buy value from items in the cart
-    const cartNumToBuy = await db.collection("Cart").find({_id: _id}).project({"_id":0, "userEmail":0}).toArray();
+    const cartNumToBuy = await db.collection("Cart").find({itemId: itemId}).project({"itemId":0, "userEmail":0}).toArray();
 
 
   
@@ -54,20 +55,20 @@ const updateCart = async (req,res) => {
     }
     //we also check if the item exists in the cart.
     else if(idExists.length === 0 ){
-        res.status(500).json({ status: 500, data: idExists, message: "The item you are trying to update does not exist in the cart" });
+        res.status(500).json({ status: 500, data: itemId, message: "The item you are trying to update does not exist in the cart" });
       }
 
     //if all checks pass the cart has an updated quantity
     else {
       const stockParsed = stockAmount[0].numInStock;
-      const idExistsParsed = idExists[0]._id;
+      const idExistsParsed = idExists[0].itemId;
       const cartNumParsed = cartNumToBuy[0].numToBuy;
 
       if((stockParsed-cartNumParsed) < 0){
         res.status(500).json({ status: 500, data: {InCart: cartNumParsed, Stock: stockParsed}, message: "The stock is too low to accomodate this request" });
       }
       else{
-        const updateResult = await db.collection("Cart").updateOne({_id: _id},{$set:{"_id":_id,"numToBuy":numToBuy, "userEmail":userEmail}});
+        const updateResult = await db.collection("Cart").updateOne({itemId: itemId},{$set:{"itemId":itemId,"numToBuy":numToBuy, "userEmail":userEmail}});
         res.status(200).json({ status: 200, data: newSet.$set, message: "Item quantity updated in Cart!" });
       }
     }

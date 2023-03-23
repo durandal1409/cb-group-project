@@ -18,29 +18,29 @@ const addToCart = async (req,res) => {
 
   //since the database uses ints and we might use strings elsewhere, the numbers are all parsed before being used
   const unparsedId = req.body._id;
-  const _id = parseInt(unparsedId);
+  const itemId = parseInt(unparsedId);
   let unparsedNumToBuy = req.body.numToBuy;
   let numToBuy = parseInt(unparsedNumToBuy);
   const userEmail = "JimmyBuyMore@realcustomer.ca"; 
 
 
-  let newSet = {$set:{_id, numToBuy, userEmail}};
+  let newSet = {$set:{_id:uuidv4(), itemId, numToBuy, userEmail}};
 
   try{
     await client.connect();
     const db = client.db("GroupProject");
 
     //these variables find the stock value of the item according to its ID
-    const stockAmount = await db.collection("Items").find({_id: _id}).project({"_id":0, "name":0, "price":0, "body_location":0, "category":0, "imageSrc":0,"companyId":0}).toArray();
+    const stockAmount = await db.collection("Items").find({_id: itemId}).project({"_id":0, "name":0, "price":0, "body_location":0, "category":0, "imageSrc":0,"companyId":0}).toArray();
 
-    //these variables find if there is already a same _id value in the cart
-    const idExists = await db.collection("Cart").find({_id: _id}).project({"numToBuy":0, "userEmail":0}).toArray();
+    //these variables find if there is already a same itemId & userEmail pair value in the cart
+    const idExists = await db.collection("Cart").find({itemId: itemId, userEmail: userEmail}).project({"numToBuy":0}).toArray();
 
     //these variables find the number to buy value from items in the cart
-    const cartNumToBuy = await db.collection("Cart").find({_id: _id}).project({"_id":0, "userEmail":0}).toArray();
+    const cartNumToBuy = await db.collection("Cart").find({itemId: itemId}).project({"itemId":0, "userEmail":0}).toArray();
 
 
-  
+    
     //before adding the items to the cart collection, we need to check if we have enough inventory to supply the request
     if(isNaN(numToBuy) === true){
       res.status(500).json({ status: 500, data: {unparsedId, unparsedNumToBuy}, message: "Make sure the requested amount is a number" });
@@ -57,14 +57,14 @@ const addToCart = async (req,res) => {
     else if(idExists.length > 0 ){
 
       const stockParsed = stockAmount[0].numInStock;
-      const idExistsParsed = idExists[0]._id;
+      const idExistsParsed = idExists[0].itemId;
       const cartNumParsed = cartNumToBuy[0].numToBuy;
 
       if((stockParsed-numToBuy-cartNumParsed) < 0){
         res.status(500).json({ status: 500, data: {InCart: cartNumParsed, Buying : numToBuy, Stock: stockParsed}, message: "The stock is too low to accomodate this request" });
       }
       else{
-        const updateResult = await db.collection("Cart").updateOne({_id: _id},{$set:{"_id":_id, "userEmail":userEmail},$inc:{"numToBuy":numToBuy}});
+        const updateResult = await db.collection("Cart").updateOne({itemId: itemId},{$inc:{"numToBuy":numToBuy}});
         res.status(201).json({ status: 201, data: newSet.$set, message: "Item quantity updated in Cart!" });
       }
     }
@@ -73,7 +73,7 @@ const addToCart = async (req,res) => {
       const result = await db.collection("Cart").insertOne(newSet.$set);
       res.status(201).json({ status: 201, data: newSet.$set, message: "Item added to Cart!" });
     }
-
+    
 
   }catch(err){
     console.log(err.stack);
