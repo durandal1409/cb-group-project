@@ -18,6 +18,8 @@ const Confirmation = ({orderId}) => {
     // }, [])
     return (
         <>
+            {/* TODO:
+            change true to order */}
             {true
                 ?   <Wrapper>
                         <h1>Your order is confirmed!</h1>
