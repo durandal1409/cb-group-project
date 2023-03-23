@@ -69,6 +69,7 @@ const addToBoughtItems = async (req,res) => {
       const stockParsed = stockAmount[0].numInStock;
 
       const result = await db.collection("BoughtItems").insertOne(newSet.$set);
+      const confirmationResult = await db.collection("Confirmation").insertOne(newSet.$set);
       const renamedResult = await db.collection("BoughtItems").updateOne({_id:_id},{$rename:{"numToBuy":"numBought"}})
       const itemQuant = await db.collection("Items").updateOne({_id: _id},{$set:{"numInStock": (stockParsed - numToBuy) }})
       res.status(201).json({ status: 201, data: newSet.$set, message: "Item bought!" });
