@@ -23,15 +23,14 @@ const addToCart = async (req,res) => {
   let numToBuy = parseInt(unparsedNumToBuy);
   const userEmail = "JimmyBuyMore@realcustomer.ca"; 
 
-
-  let newSet = {$set:{_id:uuidv4(), itemId, numToBuy, userEmail}};
-
   try{
     await client.connect();
     const db = client.db("GroupProject");
 
-    //these variables find the stock value of the item according to its ID
+    //these variables find the stock, name and price value of the item according to its ID
     const stockAmount = await db.collection("Items").find({_id: itemId}).project({"_id":0, "name":0, "price":0, "body_location":0, "category":0, "imageSrc":0,"companyId":0}).toArray();
+    const nameValue = await db.collection("Items").find({_id: itemId}).project({"_id":0, "numInStock":0, "price":0, "body_location":0, "category":0, "imageSrc":0,"companyId":0}).toArray();
+    const priceValue = await db.collection("Items").find({_id: itemId}).project({"_id":0, "name":0, "numInStock":0, "body_location":0, "category":0, "imageSrc":0,"companyId":0}).toArray();
 
     //these variables find if there is already a same itemId & userEmail pair value in the cart
     const idExists = await db.collection("Cart").find({itemId: itemId, userEmail: userEmail}).project({"numToBuy":0}).toArray();
@@ -57,8 +56,14 @@ const addToCart = async (req,res) => {
     else if(idExists.length > 0 ){
 
       const stockParsed = stockAmount[0].numInStock;
+      const nameParsed = nameValue[0].name;
+      const priceParsed = priceValue[0].price;
+
       const idExistsParsed = idExists[0].itemId;
       const cartNumParsed = cartNumToBuy[0].numToBuy;
+
+      
+      let newSet = {$set:{itemId, name:nameParsed, price: priceParsed, numToBuy, numInStock: stockParsed, userEmail}};
 
       if((stockParsed-numToBuy-cartNumParsed) < 0){
         res.status(500).json({ status: 500, data: {InCart: cartNumParsed, Buying : numToBuy, Stock: stockParsed}, message: "The stock is too low to accomodate this request" });
@@ -70,6 +75,13 @@ const addToCart = async (req,res) => {
     }
     //if all checks pass the cart has a new document
     else{
+
+      const stockParsed = stockAmount[0].numInStock;
+      const nameParsed = nameValue[0].name;
+      const priceParsed = priceValue[0].price;
+
+      let newSet = {$set:{_id:uuidv4(), itemId, name:nameParsed, price: priceParsed, numToBuy, numInstock: stockParsed, userEmail}};
+
       const result = await db.collection("Cart").insertOne(newSet.$set);
       res.status(201).json({ status: 201, data: newSet.$set, message: "Item added to Cart!" });
     }
