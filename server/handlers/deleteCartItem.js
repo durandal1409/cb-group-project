@@ -15,8 +15,9 @@ const { v4: uuidv4 } = require("uuid");
 //this function deletes a specific cart item 
 const deleteCartItem = async (req,res) => {
   const client = new MongoClient(MONGO_URI,options);
-  const unparsedId = req.body._id;
-  const _id = parseInt(unparsedId);
+  const _id = req.body._id;
+  const unparsedId = req.body.itemId;
+  const itemId = parseInt(unparsedId);
   const userEmail = "JimmyBuyMore@realcustomer.ca"; 
 
   try{

@@ -16,26 +16,30 @@ const addToBoughtItems = async (req,res) => {
   const client = new MongoClient(MONGO_URI,options);
 
   //since the database uses ints and we might use strings elsewhere, the numbers are all parsed before being used
-  const unparsedId = req.body._id;
-  const _id = parseInt(unparsedId);
+  const _id = req.body._id;
+  const unparsedId = req.body.itemId;
+  const itemId = parseInt(unparsedId);
   let unparsedNumToBuy = req.body.numToBuy;
   let numToBuy = parseInt(unparsedNumToBuy);
   const userEmail = "JimmyBuyMore@realcustomer.ca"; 
 
-  let newSet = {$set:{_id, numToBuy, userEmail}};
+  let newSet = {$set:{_id, itemId, numToBuy, userEmail}};
 
   try{
     await client.connect();
     const db = client.db("GroupProject");
 
     //these variables find the stock value of the item according to its ID
-    const stockAmount = await db.collection("Items").find({_id: _id}).project({"_id":0, "name":0, "price":0, "body_location":0, "category":0, "imageSrc":0,"companyId":0}).toArray();
+    const stockAmount = await db.collection("Items").find({_id: itemId}).project({"_id":0, "name":0, "price":0, "body_location":0, "category":0, "imageSrc":0,"companyId":0}).toArray();
 
-    //these variables find if there is already a same _id value in the bought items 
-    const idExists = await db.collection("BoughtItems").find({_id: _id}).project({"numToBuy":0, "userEmail":0}).toArray();
+    //these variables find if there is already a same itemId value in the bought items 
+    const idExists = await db.collection("BoughtItems").find({itemId: itemId}).project({"numToBuy":0, "userEmail":0}).toArray();
+
+    //these variables find if there is already a same itemId value in the confirmation 
+    const idExistsConf = await db.collection("Confirmation").find({itemId: itemId}).project({"numToBuy":0, "userEmail":0}).toArray();
 
 
-  
+
     //before adding the items to the bought items collection, we need to check if we have enough inventory to supply the request
     if(isNaN(numToBuy) === true){
       res.status(500).json({ status: 500, data: {unparsedId, unparsedNumToBuy}, message: "Make sure the requested amount is a number" });
@@ -52,14 +56,24 @@ const addToBoughtItems = async (req,res) => {
     else if(idExists.length > 0 ){
 
       const stockParsed = stockAmount[0].numInStock;
-      const idExistsParsed = idExists[0]._id;
+      const idExistsParsed = idExists[0].itemId;
 
-      if((stockParsed-numToBuy) < 0){
-        res.status(500).json({ status: 500, data: {InCart: numToBuy, Stock: stockParsed}, message: "The stock is too low to accomodate this request" });
+      if(idExistsConf.length > 0){
+        const updateResult = await db.collection("BoughtItems").updateOne({itemId: itemId},{$set:{"itemId":itemId, "userEmail":userEmail},$inc:{"numBought":numToBuy}});
+      const confirmationResult = await db.collection("Confirmation").updateOne({itemId: itemId},{$set:{"itemId":itemId, "numBought":numToBuy, "userEmail":userEmail}});;
+      const renamedResultBought = await db.collection("BoughtItems").updateOne({itemId:itemId},{$rename:{"numToBuy":"numBought"}})
+      const renamedResultConfirmation = await db.collection("Confirmation").updateOne({itemId:itemId},{$rename:{"numToBuy":"numBought"}})
+      const itemQuant = await db.collection("Items").updateOne({_id: itemId},{$set:{"numInStock": (stockParsed - numToBuy) }})
+      const deleteFromCart = await db.collection("Cart").deleteOne({itemId: itemId, userEmail:userEmail})
+        res.status(201).json({ status: 201, data: newSet.$set, message: "Item quantity updated in the Bought Category!" });
       }
       else{
-        const updateResult = await db.collection("BoughtItems").updateOne({_id: _id},{$set:{"_id":_id, "userEmail":userEmail},$inc:{"numBought":numToBuy}});
-        const itemQuant = await db.collection("Items").updateOne({_id: _id},{$set:{"numInStock": (stockParsed - numToBuy) }})
+        const updateResult = await db.collection("BoughtItems").updateOne({itemId: itemId},{$set:{"itemId":itemId, "userEmail":userEmail},$inc:{"numBought":numToBuy}});
+        const confirmationResult = await db.collection("Confirmation").insertOne(newSet.$set);
+        const renamedResultBought = await db.collection("BoughtItems").updateOne({itemId:itemId},{$rename:{"numToBuy":"numBought"}})
+        const renamedResultConfirmation = await db.collection("Confirmation").updateOne({itemId:itemId},{$rename:{"numToBuy":"numBought"}})
+        const itemQuant = await db.collection("Items").updateOne({_id: itemId},{$set:{"numInStock": (stockParsed - numToBuy) }})
+        const deleteFromCart = await db.collection("Cart").deleteOne({itemId: itemId, userEmail:userEmail})
         res.status(201).json({ status: 201, data: newSet.$set, message: "Item quantity updated in the Bought Category!" });
       }
     }
@@ -70,8 +84,10 @@ const addToBoughtItems = async (req,res) => {
 
       const result = await db.collection("BoughtItems").insertOne(newSet.$set);
       const confirmationResult = await db.collection("Confirmation").insertOne(newSet.$set);
-      const renamedResult = await db.collection("BoughtItems").updateOne({_id:_id},{$rename:{"numToBuy":"numBought"}})
-      const itemQuant = await db.collection("Items").updateOne({_id: _id},{$set:{"numInStock": (stockParsed - numToBuy) }})
+      const renamedResultBought = await db.collection("BoughtItems").updateOne({itemId:itemId},{$rename:{"numToBuy":"numBought"}})
+      const renamedResultConfirmation = await db.collection("Confirmation").updateOne({itemId:itemId},{$rename:{"numToBuy":"numBought"}})
+      const itemQuant = await db.collection("Items").updateOne({_id: itemId},{$set:{"numInStock": (stockParsed - numToBuy) }})
+      const deleteFromCart = await db.collection("Cart").deleteOne({itemId: itemId, userEmail:userEmail})
       res.status(201).json({ status: 201, data: newSet.$set, message: "Item bought!" });
     }
 
