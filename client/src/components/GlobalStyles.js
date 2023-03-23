@@ -22,4 +22,10 @@ dl, dt, dd, ol, ul, li
     box-sizing: border-box;
     font-size: 100%;
     vertical-align: baseline;
-}`;
+}
+
+a{
+  text-decoration: none;
+  color: currentColor;
+}
+`;
