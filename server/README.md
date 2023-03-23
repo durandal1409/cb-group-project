@@ -315,7 +315,6 @@ This endpoint lets us update the quantity of "numToBuy" for a certain item in th
     "_id": "abcc87a7-0557-4c09-848f-4576a8f18d14",
     "itemId": 6544,
     "numToBuy": 3,
-    "userEmail": "JimmyBuyMore@realcustomer.ca"
 }
 ```
 **_Output_**
@@ -343,7 +342,6 @@ This endpoint lets us update the quantity of "numToBuy" for a certain item in th
     "_id": "abcc87a7-0557-4c09-848f-4576a8f18d14",
     "itemId": 6544,
     "numToBuy": 3,
-    "userEmail": "JimmyBuyMore@realcustomer.ca"
 }
 ```
 **_Output_**
