@@ -20,6 +20,7 @@ function App() {
   //     .then((data) => setBacon(data));
   // }, []);
 
+  const userId = "JimmyBuyMore@realcustomer.ca";
   return (
     <div className="App">
       <BrowserRouter>
@@ -27,9 +28,9 @@ function App() {
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/item/:itemId" element={<Item />} />
+          <Route path="/item/:itemId" element={<Item userId={userId}/>} />
           <Route path="/company-profile/:companyId" element={<Profile />} />
-          <Route path="/cart" element={<Cart />} />
+          <Route path="/cart" element={<Cart userId={userId}/>} />
           <Route path="/confirmation" element={<Confirmation />} />
           <Route path="*" element={<h1>404: Oops!</h1>} />
         </Routes>

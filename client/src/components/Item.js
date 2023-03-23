@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
-const Item = () => {
+const Item = ({userId}) => {
 
     const {itemId} = useParams();
     const [itemData, setItemData] = useState(null);
@@ -51,8 +51,8 @@ const Item = () => {
             },
             body: JSON.stringify({
                 _id: itemData._id, 
-                numToBuy: itemQuantity
-                // userId
+                numToBuy: itemQuantity,
+                userEmail: userId
             })
         })
             .then(res => res.json())
