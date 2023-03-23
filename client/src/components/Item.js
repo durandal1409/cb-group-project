@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
+import QuantityBtns from './QuantityBtns';
 
 const Item = ({userId}) => {
 
@@ -63,19 +64,7 @@ const Item = ({userId}) => {
             })
             
     }
-    const handleInputChange = (e) => {
-        if (e.target.value >= 0) {
-            setItemQuantity(e.target.value);
-        }
-    }
-    const handleMinusClick = (e) => {
-        if (itemQuantity > 0) {
-            setItemQuantity(itemQuantity - 1);
-        }
-    }
-    const handlePlusClick = (e) => {
-        setItemQuantity(itemQuantity + 1);
-    }
+    
 
     return (
         <>
@@ -86,13 +75,10 @@ const Item = ({userId}) => {
                         <h2>{itemData.price}</h2>
                         <img src={itemData.imageSrc} alt={itemData.name}/>
                         {itemData.numInStock > 0
-                            ?   <Wrapper>
-                                    <ButtonDiv>
-                                        <Button onClick={handleMinusClick}>-</Button>
-                                        <Number type="number" value={itemQuantity} onChange={handleInputChange} />
-                                        <Button onClick={handlePlusClick}>+</Button>
-                                    </ButtonDiv>
-                                </Wrapper>
+                            ?   <QuantityBtns 
+                                    setItemQuantity={setItemQuantity}
+                                    itemQuantity={itemQuantity}
+                                />
                             : <p>Out of stock.</p>
                         }
                         
@@ -117,51 +103,4 @@ const Item = ({userId}) => {
 
     )
 }
-
-const Wrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  align-items: center;
-  height: 5vh;
-  width: 27vh;
-  border-radius: 15px;
-  background-color: var(--color-background);
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
-    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
-    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
-`;
-const Number = styled.input`
-  /* display: flex;
-  align-items: center; */
-  font-size: 20px;
-  border-left: 2px solid #f5f5f5;
-  border-right: 2px solid #f5f5f5;
-  border-color: grey;
-  padding: 0px 8px;
-  width: 7vh;
-  text-align: center;
-`;
-const ButtonDiv = styled.div`
-  display: flex;
-  align-content: center;
-  min-height: 10px;
-  gap: 5px;
-  justify-content: center;
-  background-color: var(--color-background);
-`;
-const Button = styled.button`
-  width: 100%;
-  text-align: center;
-  font-size: 30px;
-  font-weight: bold;
-  border-style: none;
-  background-color: transparent;
-  padding: 0px 15px;
-  :hover {
-    background-color: #bfbfbf;
-    border-radius: 15px;
-  }
-`;
-
 export default Item;
