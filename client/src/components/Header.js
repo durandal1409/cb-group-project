@@ -21,16 +21,14 @@ const Header = () => {
       });
     */
 
-    const categories = new Set();
+    let categories = [];
     items.forEach((item) => {
-      categories.add(item.category);
+      if (!categories.includes(item.category)) {
+        categories.push(item.category);
+      }
     });
-    console.log(categories);
+    categories.sort();
     setItemsCategory(categories);
-
-    // categories.forEach((test) => {
-    //console.log(test);
-    //});
   }, []);
 
   return (
@@ -38,29 +36,37 @@ const Header = () => {
       <Wrapper>
         <UList>
           <List>
-            <AnchorTitle href="#">AllStar</AnchorTitle>
-          </List>
-          <List>
-            <Anchor href="#">Categories</Anchor>
+            <AnchorTitle to={"/"}>AllStar</AnchorTitle>
           </List>
         </UList>
 
+        <UlCategories>
+          {itemsCategory &&
+            itemsCategory.map((category) => {
+              return (
+                <List key={category}>
+                  <Anchor to={`/category/${category}`}>{category}</Anchor>
+                </List>
+              );
+            })}
+        </UlCategories>
+
         <UserList>
           <List>
-            <Anchor href="#">
+            <Anchor to={"/"}>
               <AiOutlineSearch />
             </Anchor>
           </List>
           <List>
-            <Anchor href="#">UserName</Anchor>
+            <Anchor to={"/"}>UserName</Anchor>
           </List>
           <List>
-            <Anchor href="#">
+            <Anchor to={"/"}>
               <AiOutlineUser />
             </Anchor>
           </List>
           <List>
-            <Anchor href="#">
+            <Anchor to={"/"}>
               <AiOutlineShoppingCart />
             </Anchor>
           </List>
@@ -81,8 +87,17 @@ const UList = styled.ul`
   font-weight: bold;
   font-size: 18px;
   display: flex;
-  justify-content: space-around;
+  flex-direction: row;
+  justify-content: flex-start;
   background-color: var(--color-background);
+`;
+const UlCategories = styled(UList)`
+  word-wrap: break-word;
+  flex-direction: row;
+  justify-content: center;
+  & li a {
+    width: max-content;
+  }
 `;
 const UserList = styled.ul`
   display: flex;
@@ -103,7 +118,8 @@ const List = styled.li`
   padding: 10px 15px;
   list-style-type: none;
 `;
-const Anchor = styled.a`
+const Anchor = styled(Link)`
+  display: flex;
   text-decoration: none;
   color: white;
   color: var(--color-blackfont-text);
@@ -114,22 +130,14 @@ const Anchor = styled.a`
       rgba(1, 2, 3, 0.4) 0px 30px;
   }
 `;
-const AnchorTitle = styled.a`
+const AnchorTitle = styled(Link)`
   text-decoration: none;
-  font-size: 25px;
+  font-size: 35px;
   font-family: var(--Font-heading-title);
-  //  font-family: var(--font-text);
   font-style: italic;
   color: white;
   color: var(--color-blackfont-text);
+  letter-spacing: 0.5rem;
 `;
 
-/*const Banner = styled.div`
-      width: 100%;
-      height: 650px;
-      background: url("assets/watchBanner.png");
-      background-repeat: no-repeat;
-      background-position: center;
-      background-size: cover;
-    `;*/
 export default Header;
