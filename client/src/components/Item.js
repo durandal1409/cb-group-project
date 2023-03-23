@@ -9,10 +9,6 @@ const Item = ({userId}) => {
     const [companyData, setCompanyData] = useState(null);
     const [itemQuantity, setItemQuantity] = useState(1);
 
-    // TODO:
-    // change to context?
-    const userId = "JimmyBuyMore@realcustomer.ca";
-
     // we need to receive item
     // and then fetch company with the companyId from item object
     const fetchItemAndCompany = async () => {
