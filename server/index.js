@@ -12,11 +12,13 @@ const {getCompany} = require("./handlers/getCompany")
 const {getCompanyItems} = require("./handlers/getCompanyItems")
 const {getCart} = require("./handlers/getCart")
 const {getBoughtItems} = require("./handlers/getBoughtItems")
+const {getConfirmation} = require("./handlers/getConfirmation")
 const {addToCart} = require("./handlers/addToCart")
 const {addToBoughtItems} = require("./handlers/addToBoughtItems")
 const {updateCart} = require("./handlers/updateCart")
 const {deleteCartItem} = require("./handlers/deleteCartItem")
 const {deleteBoughtItem} = require("./handlers/deleteBoughtItem")
+const {deleteConfirmation} = require("./handlers/deleteConfirmation")
 
 express()
   .use(function(req, res, next) {
@@ -44,6 +46,7 @@ express()
   .get("/api/get-company-items/:company", getCompanyItems)
   .get("/api/get-cart/:useremail", getCart)
   .get("/api/get-bought-items/:useremail", getBoughtItems)
+  .get("/api/get-confirmation", getConfirmation)
 
   .post("/api/add-to-cart", addToCart)
   .post("/api/add-to-bought-items", addToBoughtItems)
@@ -52,6 +55,7 @@ express()
 
   .delete("/api/delete-cart-item", deleteCartItem)
   .delete("/api/delete-bought-item", deleteBoughtItem)
+  .delete("/api/delete-confirmation", deleteConfirmation)
   
   
   // this is our catch all endpoint.
