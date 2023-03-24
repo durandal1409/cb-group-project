@@ -164,22 +164,18 @@ The useremail value is hardcoded as JimmyBuyMore@realcustomer.ca for this projec
 	"status": 200,
 	"data": [
 		{
-			"_id": "e70d5c3f-179c-4097-ae23-b73c43faec6c",
 			"itemId": 6543,
 			"name": "Barska GB12166 Fitness Watch with Heart Rate Monitor",
 			"price": "$49.99",
 			"numToBuy": 1,
-			"numInstock": 9,
-			"userEmail": "JimmyBuyMore@realcustomer.ca"
+			"numInStock": 10
 		},
 		{
-			"_id": "abcc87a7-0557-4c09-848f-4576a8f18d14",
 			"itemId": 6544,
 			"name": "Belkin GS5 Sport Fit Armband, Black F8M918B1C00",
 			"price": "$24.99",
 			"numToBuy": 1,
-			"numInstock": 9,
-			"userEmail": "JimmyBuyMore@realcustomer.ca"
+			"numInStock": 3
 		}
 	],
 	"message": "Cart list for user JimmyBuyMore@realcustomer.ca found!"
