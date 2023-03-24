@@ -8,7 +8,6 @@ const initialState = [];
 const reducer = (state, action) => {
     switch(action.type) {
         case "receive-cart-info-from-server": {
-            console.log("action in receive-cart-info-from-server: ", action)
             return [...action.data]
         }
         case "add-item": {

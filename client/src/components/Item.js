@@ -63,19 +63,20 @@ const Item = ({userId}) => {
                 setIsFetching(false);
                 if (data.status === 201) {
                     // reducer functions that change the context
-                    state.find(item => {
-                        console.log("s: ", state, item, item.itemId, Number(itemData._id))
+                    console.log("f: ", state.find(item => {
+                        console.log("item: ", item, itemData)
                         return Number(item.itemId) === Number(itemData._id)
-                    })
+                    }))
                     if (state.find(item => Number(item.itemId) === Number(itemData._id))) {
                         console.log("change");
                         changeQuantity(data.data.numToBuy, itemId)
                     } else {
-                        console.log("add");
+                        console.log("add", data.data);
                         addItem(data.data.cart[0])
                     }
                     setItemQuantity(1)
                 } else {
+                    // console.log("ddd: ", data);
                     window.alert(data.message)
                 }
             })
