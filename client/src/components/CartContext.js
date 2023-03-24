@@ -12,7 +12,7 @@ const reducer = (state, action) => {
             return [...action.data]
         }
         case "add-item": {
-            console.log("state in add-item: ", state)
+            console.log("state in add-item: ", state, action.item)
             return [
                 ...state,
                 action.item,

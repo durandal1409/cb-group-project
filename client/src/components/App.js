@@ -23,11 +23,15 @@ function App() {
     fetch(`/api/get-cart/${userId}`)
       .then((res) => res.json())
       .then((data) => {
-        if (data.status !== 200) {
+        if (data.status === 200) {
+          receiveCartInfoFromServer(data.data);
+        }
+        else if (data.status === 404) {
+          
+        } else {
           window.alert(data.message);
           throw new Error(data.message);
         }
-        receiveCartInfoFromServer(data.data);
       })
       .catch((error) => {
         window.alert(error);
