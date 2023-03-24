@@ -39,7 +39,6 @@ const Item = ({userId}) => {
     }, []);
 
     const handleAddToCart = (e) => {
-        console.log("i: ", itemData);
         // check if the stock has the required quantity 
         if (itemQuantity > itemData.numInStock) {
             window.alert(`The seller only has ${itemData.numInStock} items.`);
@@ -64,10 +63,16 @@ const Item = ({userId}) => {
                 setIsFetching(false);
                 if (data.status === 201) {
                     // reducer functions that change the context
-                    if (state.find(item => item.itemId === itemData._id)) {
+                    state.find(item => {
+                        console.log("s: ", state, item, item.itemId, Number(itemData._id))
+                        return Number(item.itemId) === Number(itemData._id)
+                    })
+                    if (state.find(item => Number(item.itemId) === Number(itemData._id))) {
+                        console.log("change");
                         changeQuantity(data.data.numToBuy, itemId)
                     } else {
-                        addItem(data.data.cart)
+                        console.log("add");
+                        addItem(data.data.cart[0])
                     }
                     setItemQuantity(1)
                 } else {
