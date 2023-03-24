@@ -11,8 +11,7 @@ This project uses all the endpoints below:
 .get("/api/get-company/:company", getCompany)
 .get("/api/get-company-items/:company", getCompanyItems)
 .get("/api/get-cart/:useremail", getCart)
-.get("/api/get-bought-items/:useremail", getBoughtItems)
-.get("/api/get-confirmation", getConfirmation)
+.get("/api/get-bought-items/:id", getBoughtItems)
 
 .post("/api/add-to-cart", addToCart)
 .post("/api/add-to-bought-items", addToBoughtItems)
@@ -20,8 +19,6 @@ This project uses all the endpoints below:
 .patch("/api/update-cart", updateCart)
 
 .delete("/api/delete-cart-item", deleteCartItem)
-.delete("/api/delete-bought-item", deleteBoughtItem)
-.delete("/api/delete-confirmation", deleteConfirmation)
 ```
 
 There will be a list of all the expected bodies these endpoints should receive as well as the outpout of each of them. It is important to pay attention to the keys as some of them will change throughout the process.
@@ -167,54 +164,27 @@ The useremail value is hardcoded as JimmyBuyMore@realcustomer.ca for this projec
 	"status": 200,
 	"data": [
 		{
-			"_id": "e70d5c3f-179c-4097-ae23-b73c43faec6c",
 			"itemId": 6543,
 			"name": "Barska GB12166 Fitness Watch with Heart Rate Monitor",
 			"price": "$49.99",
 			"numToBuy": 1,
-			"numInstock": 9,
-			"userEmail": "JimmyBuyMore@realcustomer.ca"
+			"numInStock": 10
 		},
 		{
-			"_id": "abcc87a7-0557-4c09-848f-4576a8f18d14",
 			"itemId": 6544,
 			"name": "Belkin GS5 Sport Fit Armband, Black F8M918B1C00",
 			"price": "$24.99",
 			"numToBuy": 1,
-			"numInstock": 9,
-			"userEmail": "JimmyBuyMore@realcustomer.ca"
+			"numInStock": 3
 		}
 	],
 	"message": "Cart list for user JimmyBuyMore@realcustomer.ca found!"
 }
 ```
-## Confirmation
 
-### /api/get-confirmation
-
-The numToBuy value is changed here for numBought, as to more accurately reflect that this value has been substracted from the appropriate numInstock value in the Items collection
-
-**_Output_**
-```
-{
-	"status": 200,
-	"data": [
-		{
-			"_id": "e70d5c3f-179c-4097-ae23-b73c43faec6c",
-			"itemId": 6543,
-			"name": "Barska GB12166 Fitness Watch with Heart Rate Monitor",
-			"price": "$49.99",
-			"numInStock": 8,
-			"userEmail": "JimmyBuyMore@realcustomer.ca",
-			"numBought": 1
-		}
-	],
-	"message": "Confirmation of last order for user JimmyBuyMore@realcustomer.ca found!"
-}
-```
 ## Bought Items
 
-### /api/get-bought-items/:useremail
+### /api/get-bought-items/:id
 
 The numToBuy value is changed here for numBought, as to more accurately reflect that this value has been substracted from the appropriate numInstock value in the Items collection
 
@@ -222,18 +192,25 @@ The numToBuy value is changed here for numBought, as to more accurately reflect 
 ```
 {
 	"status": 200,
-	"data": [
-		{
-			"_id": "e70d5c3f-179c-4097-ae23-b73c43faec6c",
-			"itemId": 6543,
-			"name": "Barska GB12166 Fitness Watch with Heart Rate Monitor",
-			"price": "$49.99",
-			"numInStock": 8,
-			"userEmail": "JimmyBuyMore@realcustomer.ca",
-			"numBought": 1
-		}
-	],
-	"message": "Bought list for user JimmyBuyMore@realcustomer.ca found!"
+	"data": {
+		"_id": "a9a5df89-7070-4367-8dbb-0c9ef4a5c3a3",
+		"userEmail": "JimmyBuyMore@realcustomer.ca",
+		"cart": [
+			{
+				"itemId": 6544,
+				"name": "Belkin GS5 Sport Fit Armband, Black F8M918B1C00",
+				"price": "$24.99",
+				"numBought": 6
+			},
+			{
+				"itemId": 6554,
+				"name": "Garmin International Garmin vofit Bundle - Activity tracking wristband - slate (010-01225-35)",
+				"price": "$169.99",
+				"numBought": 4
+			}
+		]
+	},
+	"message": "Bought list for user JimmyBuyMore@realcustomer.ca with ID a9a5df89-7070-4367-8dbb-0c9ef4a5c3a3 found!"
 }
 ```
 
@@ -253,35 +230,35 @@ The Confirmation and BoughtItems collections differ in that the BoughtItems coll
 ```
 **_Output_** 
 
-the inputted **__id_** as **_itemId_** and adds a **_UUID_** for the new **__id_** value
+the inputted **__id_** as **_itemId_** and adds the **_userEmail_** for the new **__id_** value
 ```
 {
 	"status": 201,
 	"data": {
-		"_id": "e70d5c3f-179c-4097-ae23-b73c43faec6c",
-		"itemId": 6543,
-		"name": "Barska GB12166 Fitness Watch with Heart Rate Monitor",
-		"price": "$49.99",
-		"numToBuy": 1,
-		"numInstock": 9,
-		"userEmail": "JimmyBuyMore@realcustomer.ca"
+		"_id": "JimmyBuyMore@realcustomer.ca",
+		"cart": [
+			{
+				"itemId": 6543,
+				"name": "Barska GB12166 Fitness Watch with Heart Rate Monitor",
+				"price": "$49.99",
+				"numToBuy": 1,
+				"numInStock": 10
+			}
+		]
 	},
-	"message": "Item added to Cart!"
+	"message": "User does not exist and item added to Cart!"
 }
 ```
 ## Bought Items / Confirmation
 ### /api/add-to-bought-items
-This endpoint adds the cart item to both the BoughtItems collection and the Confirmation collection. Both outputs are identical. 
+This endpoint adds the cart item to the BoughtItems collection.
 
 Once an item is bought, it is also automatically removed from the cart and the quantities are adjusted in the Items collection
 
 **_Input_**
 ```
 {
-    "_id": "e70d5c3f-179c-4097-ae23-b73c43faec6c",
-    "itemId": 6543,
-    "numToBuy": 1,
-    "userEmail": "JimmyBuyMore@realcustomer.ca"
+    "_id": "JimmyBuyMore@realcustomer.ca",
 }
 ```
 
@@ -290,15 +267,24 @@ Once an item is bought, it is also automatically removed from the cart and the q
 {
 	"status": 201,
 	"data": {
-		"_id": "e70d5c3f-179c-4097-ae23-b73c43faec6c",
-		"itemId": 6543,
-		"name": "Barska GB12166 Fitness Watch with Heart Rate Monitor",
-		"price": "$49.99",
-		"numToBuy": 1,
-		"numInStock": 8,
-		"userEmail": "JimmyBuyMore@realcustomer.ca"
+		"_id": "a9a5df89-7070-4367-8dbb-0c9ef4a5c3a3",
+		"userEmail": "JimmyBuyMore@realcustomer.ca",
+		"cart": [
+			{
+				"itemId": 6544,
+				"name": "Belkin GS5 Sport Fit Armband, Black F8M918B1C00",
+				"price": "$24.99",
+				"numBought": 6
+			},
+			{
+				"itemId": 6554,
+				"name": "Garmin International Garmin vofit Bundle - Activity tracking wristband - slate (010-01225-35)",
+				"price": "$169.99",
+				"numBought": 4
+			}
+		]
 	},
-	"message": "Item bought!"
+	"message": "Items successfully bought!"
 }
 ```
 
@@ -312,7 +298,7 @@ This endpoint lets us update the quantity of "numToBuy" for a certain item in th
 **_Input_**
 ```
 {
-    "_id": "abcc87a7-0557-4c09-848f-4576a8f18d14",
+    "_id": "JimmyBuyMore@realcustomer.ca",
     "itemId": 6544,
     "numToBuy": 3,
 }
@@ -322,10 +308,9 @@ This endpoint lets us update the quantity of "numToBuy" for a certain item in th
 {
 	"status": 200,
 	"data": {
-		"_id": "abcc87a7-0557-4c09-848f-4576a8f18d14",
+		"_id": "JimmyBuyMore@realcustomer.ca",
 		"itemId": 6544,
 		"numToBuy": 3,
-		"userEmail": "JimmyBuyMore@realcustomer.ca"
 	},
 	"message": "Item quantity updated in Cart!"
 }
@@ -339,60 +324,17 @@ This endpoint lets us update the quantity of "numToBuy" for a certain item in th
 **_Input_**
 ```
 {
-    "_id": "abcc87a7-0557-4c09-848f-4576a8f18d14",
+    "_id": "JimmyBuyMore@realcustomer.ca",
     "itemId": 6544,
-    "numToBuy": 3,
 }
 ```
 **_Output_**
 ```
 {
 	"status": 200,
-	"data": "abcc87a7-0557-4c09-848f-4576a8f18d14",
+	"data": "6544",
 	"message": "Cart item deleted successfully!"
 }
 ```
 
-## Bought Items
-### /api/delete-bought-item
----
-**_WARNING:_** the value for the amount is **_numBought_** and not **_numToBuy_** for this endpoint!
-
----
-
-Once a bought item is deleted, the quantity in the **_numBought_** is restored to the Items collection under the appropriate item
-
-**_Input_**
-```
-{
-    "_id": "e70d5c3f-179c-4097-ae23-b73c43faec6c",
-    "itemId": 6543,
-    "numBought": 1,
-    "userEmail": "JimmyBuyMore@realcustomer.ca"
-}
-```
-**_Output_**
-```
-{
-	"status": 200,
-	"data": "e70d5c3f-179c-4097-ae23-b73c43faec6c",
-	"message": "Bought item deleted successfully!"
-}
-```
-
-## Confirmation
-### /api/delete-confirmation
-This endpoint deletes all the items in the Confirmation collection. It will be ran before each purchase so that the Confirmation collection only contains the latest purchase
-
-**_Output_**
-```
-{
-	"status": 200,
-	"data": {
-		"acknowledged": true,
-		"deletedCount": 1
-	},
-	"message": "All confirmation elements deleted successfully!"
-}
-```
 
