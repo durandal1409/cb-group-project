@@ -1,4 +1,7 @@
-"use strict";
+ 
+// PLACEHOLDER IF TIME ALLOWS
+
+ /* "use strict";
 
 const { MongoClient } = require("mongodb");
 
@@ -27,4 +30,4 @@ const deleteConfirmation = async (req,res) => {
     client.close();
 }
 
-module.exports = {deleteConfirmation};
+module.exports = {deleteConfirmation}; */

@@ -45,8 +45,8 @@ express()
   .get("/api/get-company/:company", getCompany)
   .get("/api/get-company-items/:company", getCompanyItems)
   .get("/api/get-cart/:useremail", getCart)
-  .get("/api/get-bought-items/:useremail", getBoughtItems)
-  .get("/api/get-confirmation", getConfirmation)
+  .get("/api/get-bought-items/:_id", getBoughtItems)
+  //.get("/api/get-confirmation", getConfirmation)
 
   .post("/api/add-to-cart", addToCart)
   .post("/api/add-to-bought-items", addToBoughtItems)
@@ -54,8 +54,8 @@ express()
   .patch("/api/update-cart", updateCart)
 
   .delete("/api/delete-cart-item", deleteCartItem)
-  .delete("/api/delete-bought-item", deleteBoughtItem)
-  .delete("/api/delete-confirmation", deleteConfirmation)
+  //.delete("/api/delete-bought-item", deleteBoughtItem)
+  //.delete("/api/delete-confirmation", deleteConfirmation)
   
   
   // this is our catch all endpoint.
