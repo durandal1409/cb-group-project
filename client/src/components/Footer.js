@@ -56,6 +56,7 @@ const BlackBanner = styled.div`
   background-color: rgba(31, 31, 31);
   color: white;
   padding: 30px;
+  box-shadow: rgba(0, 0, 0, 0.45) 0px -25px 20px -20px;
 `;
 const AnchorTitle = styled.a`
   text-decoration: none;
@@ -74,7 +75,8 @@ const Approved = styled.div`
   background-color: var(--color-background);
   flex-direction: column;
   align-items: center;
-  box-shadow: rgba(245, 245, 245, 10) 0px -5px, rgba(1, 2, 3, 0.2) 0px -10px;
+  box-shadow: rgba(245, 245, 245, 10) 0px -5px, rgba(1, 2, 3, 0.2) 0px -10px,
+    rgba(0, 0, 0, 0.45) 0px -25px 20px -20px;
   padding: 45px;
 `;
 const UList = styled.div`

@@ -4,9 +4,11 @@ import { AiOutlineShoppingCart } from "react-icons/ai";
 import { AiOutlineUser } from "react-icons/ai";
 import styled from "styled-components";
 import items from "../assets/items.json";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [itemsArr, setItemArr] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     /*fetch("")
@@ -45,12 +47,13 @@ const Home = () => {
       <Wrapper>
         {itemsArr &&
           itemsArr.map((randomItem) => {
-            console.log(randomItem);
             return (
               <DiscoverItem key={randomItem._id}>
                 <img src={randomItem.imageSrc} />
 
-                <button>More Info</button>
+                <button onClick={() => navigate(`/item/${randomItem._id}`)}>
+                  More Info
+                </button>
               </DiscoverItem>
             );
           })}
@@ -80,7 +83,8 @@ const Quote = styled.div`
   font-size: 25px;
   padding: 25px;
   color: var(--color-blackfont-titles);
-  box-shadow: rgba(245, 245, 245, 10) 0px 5px, rgba(1, 2, 3, 0.2) 0px 10px;
+  box-shadow: rgba(245, 245, 245, 10) 0px 5px, rgba(1, 2, 3, 0.2) 0px 10px,
+    rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
 `;
 const Explore = styled.div`
   display: flex;
@@ -98,7 +102,7 @@ const Wrapper = styled.div`
   flex-direction: row;
   justify-content: space-around;
   width: 100%;
-  padding: 50px;
+  padding: 30px 50px 60px 50px;
 `;
 const DiscoverItem = styled.div`
   display: grid;
