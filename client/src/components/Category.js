@@ -75,7 +75,7 @@ const Category = () => {
           );
         })
       ) : (
-        <Nothing> Nothing available yet</Nothing>
+        <Nothing> Nothing available yet.</Nothing>
       )}
     </Wrapper>
   );
