@@ -3,8 +3,6 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import items from "../assets/items.json";
 
-//need route for this <Route path="`/category/:category`" element={<Filtered />} />
-
 const Category = () => {
   const [itemsArr, setItemArr] = useState([]);
   let { category } = useParams();
