@@ -14,23 +14,22 @@ import Confirmation from "./Confirmation";
 import Category from "./Category";
 
 function App() {
-
   const userId = "JimmyBuyMore@realcustomer.ca";
   const {
-          actions: { receiveCartInfoFromServer }
-        } = useContext(CartContext);
+    actions: { receiveCartInfoFromServer },
+  } = useContext(CartContext);
 
   useEffect(() => {
     fetch(`/api/get-cart/${userId}`)
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         if (data.status !== 200) {
           window.alert(data.message);
           throw new Error(data.message);
         }
         console.log("in fetch: ", data.data);
         receiveCartInfoFromServer(data.data);
-      })
+      });
   }, []);
 
   return (
@@ -41,7 +40,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/item/:itemId" element={<Item userId={userId} />} />
-          <Route path="`/category/:category`" element={<Category />} />
+          <Route path="/category/:category" element={<Category />} />
           <Route path="/company-profile/:companyId" element={<Profile />} />
           <Route path="/cart" element={<Cart userId={userId} />} />
           <Route path="/confirmation" element={<Confirmation />} />
