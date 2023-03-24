@@ -23,14 +23,19 @@ const deleteCartItem = async (req,res) => {
   try{
     await client.connect();
     const db = client.db("GroupProject");
+    const stockAmount = await db.collection("Items").find({_id: itemId}).project({"_id":0, "name":0, "price":0, "body_location":0, "category":0, "imageSrc":0,"companyId":0}).toArray();
+
+
     //we need to check if the item ID exists in the cart, if not, inform the front end
-    if((await db.collection("Cart").countDocuments({_id: _id}, {limit:1})) !== 1){
+    if((await db.collection("Cart").countDocuments({_id: userEmail}, {limit:1})) !== 1){
       res.status(500).json({status:500, data: _id , message: `This item ID is not contained in the cart from user: ${userEmail}!`});
     }
     //else we delete the document with the correct item ID and useremail to attribute who needs their document deleted
     else{
-      const result = await db.collection("Cart").deleteOne({_id:_id, userEmail: userEmail});
-      res.status(200).json({status:200, data: _id , message: "Cart item deleted successfully!"});
+      const stockParsed = stockAmount[0].numInStock;
+      const result = await db.collection("Cart").updateOne({"cart.itemId":{$eq: itemId}}, {$pull:{cart:{itemId: itemId}}});
+      //const itemQuant = await db.collection("Items").updateOne({_id: itemId},{$set:{"numInStock": (stockParsed + numToBuy) }});
+      res.status(200).json({status:200, data: itemId , message: "Cart item deleted successfully!"});
     }
   }catch(err){
     console.log(err.stack);

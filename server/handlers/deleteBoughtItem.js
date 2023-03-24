@@ -1,4 +1,6 @@
-"use strict";
+// PLACEHOLDER IF TIME ALLOWS
+
+/*"use strict";
 
 const { MongoClient } = require("mongodb");
 
@@ -43,4 +45,4 @@ const deleteBoughtItem = async (req,res) => {
     client.close();
 };
 
-module.exports = {deleteBoughtItem};
+module.exports = {deleteBoughtItem}; */
