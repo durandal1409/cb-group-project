@@ -15,53 +15,92 @@ const Cart = ({userId}) => {
         }
     } = useContext(CartContext);
 
-    console.log("state: ", state);
-   
-
-    const handleBtnClick = () => {
-
+    const handleChange = (e, itemId, action) => {
+        // setIsFetching(true);
+        action(itemId);
+        // fetch("/api/update-cart", {
+        //     method: "PATCH",
+        //     headers: {
+        //         "Accept": "application/json",
+        //         "Content-Type": "application/json"
+        //     },
+        //     body: JSON.stringify({
+        //         "_id": "abcc87a7-0557-4c09-848f-4576a8f18d14",
+        //         "itemId": 6544,
+        //         "numToBuy": state.find(item => item._id === itemId).numToBuy,
+        //     })
+        // })
+        //     .then(res => res.json())
+        //     .then((data) => {
+        //         setIsFetching(false);
+        //         if (data.status === 200) {
+        //             // update state again?
+        //         } else {
+                    
+        //             window.alert(data.message);
+        //         }
+        //     })
+        //     .catch((error) => {
+        //         window.alert(error);
+        //     })
+    
     }
-    // TODO:
-    // useEffect(() => {
-    //     fetch(`/api/get-cart/${userId}`)
-    //     .then(res => res.json())
-    //     .then(data => {
-    //         if (data.status !== 200) {
-    //             window.alert(data.message);
-    //             throw new Error(data.message);
-    //         }
-    //         setCart(data.data)
-    //     });
-    // }, []);
-    // console.log("cart: ", cart);
+
+    const handleBtnClick = (itemId) => {
+        // setIsFetching(true);
+        removeItem(itemId);
+        // fetch("/api/delete-cart-item", {
+        //     method: "DELETE",
+        //     headers: {
+        //         "Accept": "application/json",
+        //         "Content-Type": "application/json"
+        //     },
+        //     body: JSON.stringify({
+                //     "_id": "abcc87a7-0557-4c09-848f-4576a8f18d14",
+                //     "itemId": 6544,
+                //     "numToBuy": 3,
+                // })
+        // })
+        //     .then(res => res.json())
+        //     .then((data) => {
+        //         setIsFetching(false);
+        //         if (data.status === 200) {
+        //             // update state again?
+        //         } else {
+                    
+        //             window.alert(data.message);
+        //         }
+        //     })
+        //     .catch((error) => {
+        //         window.alert(error);
+        //     })
+    }
+
 
     return (
         <>
-            {state
+            {state && !isFetching
                 ?   <Wrapper>
                         <h1>Cart: </h1>
-                        {/* TODO:
-                            add order details */}
                             <ol>
-                                {state.map(item => {
-                                    {/* console.log("item: ", item); */}
+                                {state.map((item, ind) => {
                                     return (
                                         <li key={item._id}>
                                             <p>{item.name}</p>
                                             <QuantityWrapper>
                                                 <span>QTY: {item.numToBuy}</span>
                                                 <QuantityBtns 
-                                                    handleMinusClick={() => subtractQuantity(item._id)} 
-                                                    handleInputChange={changeQuantity} 
-                                                    handlePlusClick={addQuantity} 
-                                                    itemQuantity={item.numToBuy}
+                                                    handleMinusClick={(e) => handleChange(e, item._id, subtractQuantity)} 
+                                                    handleInputChange={(e) => handleChange(e, item._id, changeQuantity)} 
+                                                    handlePlusClick={(e) => handleChange(e, item._id, addQuantity)} 
+                                                    itemQuantity={state[ind].numToBuy}
                                                 />
                                             </QuantityWrapper>
                                             <PriceWrapper>
                                                 <span>Price: {item.price}</span>
-                                                <span>Total: ${Number(item.price.slice(1)) * item.numToBuy}</span>
+                                                <span>Total: ${Number(item.price.slice(1)) * state[ind].numToBuy}</span>
                                             </PriceWrapper>
-                                            <RemoveBtn onClick={handleBtnClick}>Remove</RemoveBtn>
+                                            <RemoveBtn onClick={() => handleBtnClick(item._id)}>Remove</RemoveBtn>
                                         </li>
                                     )
                                 })}
