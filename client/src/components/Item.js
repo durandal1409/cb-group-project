@@ -12,7 +12,7 @@ const Item = ({userId}) => {
     const [itemQuantity, setItemQuantity] = useState(1);
     // enable/disable button AddToCart
     const [isFetching, setIsFetching] = useState(false);
-    const {actions: { addItem }
+    const {state, actions: { addItem, changeQuantity }
     } = useContext(CartContext);
 
     // we need to receive item
@@ -39,6 +39,7 @@ const Item = ({userId}) => {
     }, []);
 
     const handleAddToCart = (e) => {
+        console.log("i: ", itemData);
         // check if the stock has the required quantity 
         if (itemQuantity > itemData.numInStock) {
             window.alert(`The seller only has ${itemData.numInStock} items.`);
@@ -53,17 +54,22 @@ const Item = ({userId}) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                _id: userId,
-                itemId: itemData.itemId,
-                numToBuy: itemQuantity
+                "_id": itemData._id,
+                "numToBuy": itemQuantity,
+                "userEmail": userId
             })
         })
             .then(res => res.json())
             .then(data => {
                 setIsFetching(false);
                 if (data.status === 201) {
-                    // reducer function that changes the context
-                    addItem(data.data)
+                    // reducer functions that change the context
+                    if (state.find(item => item.itemId === itemData._id)) {
+                        changeQuantity(data.data.numToBuy, itemId)
+                    } else {
+                        addItem(data.data.cart)
+                    }
+                    setItemQuantity(1)
                 } else {
                     window.alert(data.message)
                 }
@@ -83,7 +89,7 @@ const Item = ({userId}) => {
         }
     }
     const handleMinusClick = (e) => {
-        if (itemQuantity > 0) {
+        if (itemQuantity > 1) {
             setItemQuantity(itemQuantity - 1);
         }
     }

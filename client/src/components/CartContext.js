@@ -3,15 +3,16 @@ import { useReducer, createContext } from "react";
 
 export const CartContext = createContext();
 
-const initialState = null;
+const initialState = [];
 
 const reducer = (state, action) => {
     switch(action.type) {
         case "receive-cart-info-from-server": {
-            console.log("in reducer: ", action)
+            console.log("action in receive-cart-info-from-server: ", action)
             return [...action.data]
         }
         case "add-item": {
+            console.log("state in add-item: ", state)
             return [
                 ...state,
                 action.item,
@@ -21,8 +22,10 @@ const reducer = (state, action) => {
             return state.filter(item => item.itemId !== action.itemId)
         } case "change-quantity": {
             return state.map(item => {
-                if(item.itemId === action.data.itemId) {
-                    item.numToBuy = Number(action.data.numToBuy);
+                console.log("st: ", action.numToBuy, typeof action.numToBuy, typeof item.numToBuy)
+
+                if(item.itemId === Number(action.itemId)) {
+                    item.numToBuy = Number(action.numToBuy);
                 }
                 return item;
             });
@@ -44,8 +47,8 @@ export const CartProvider = ({children}) => {
     const removeItem = (itemId) => {
         dispatch({type: "remove-item", itemId})
     }
-    const changeQuantity = (data) => {
-        dispatch({type: "change-quantity", data})
+    const changeQuantity = (numToBuy, itemId) => {
+        dispatch({type: "change-quantity", numToBuy, itemId})
     }
 
     return (
