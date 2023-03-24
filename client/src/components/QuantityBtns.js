@@ -1,20 +1,8 @@
 import styled from "styled-components";
 
-const QuantityBtns = ({setItemQuantity, itemQuantity}) => {
+const QuantityBtns = ({handleMinusClick, handleInputChange, handlePlusClick, itemQuantity}) => {
 
-    const handleInputChange = (e) => {
-        if (e.target.value >= 0) {
-            setItemQuantity(e.target.value);
-        }
-    }
-    const handleMinusClick = (e) => {
-        if (itemQuantity > 0) {
-            setItemQuantity(itemQuantity - 1);
-        }
-    }
-    const handlePlusClick = (e) => {
-        setItemQuantity(itemQuantity + 1);
-    }
+   
     
     return (
         <Wrapper>

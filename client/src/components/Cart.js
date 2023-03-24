@@ -1,19 +1,26 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import styled from "styled-components";
 import QuantityBtns from './QuantityBtns';
+import { CartContext } from "./CartContext";
 
 const Cart = ({userId}) => {
-    // TODO:
-    // change the initial state to null
-    const [cart, setCart] = useState([
-        {_id: 6543, price: "$5.00", numInStock: 9, numToBuy: 4, name: "Barska GB12166 Fitness Watch with Heart Rate Monitor"},
-        {_id: 6544, price: "$5.00", numInStock: 9, numToBuy: 4, name: "Barska GB12166 Fitness Watch with Heart Rate Monitor"}
-    ]);
-   
-    const changeState = () => {
-        setCart();
-    }
+    const [isFetching, setIsFetching] = useState(false);
+    const {
+        state, 
+        actions: { 
+            removeItem,
+            changeQuantity,
+            addQuantity,
+            subtractQuantity
+        }
+    } = useContext(CartContext);
 
+    console.log("state: ", state);
+   
+
+    const handleBtnClick = () => {
+
+    }
     // TODO:
     // useEffect(() => {
     //     fetch(`/api/get-cart/${userId}`)
@@ -30,32 +37,38 @@ const Cart = ({userId}) => {
 
     return (
         <>
-            {cart
+            {state
                 ?   <Wrapper>
                         <h1>Cart: </h1>
                         {/* TODO:
                             add order details */}
                             <ol>
-                                {cart.map(item => {
-                                    console.log("item: ", item);
+                                {state.map(item => {
+                                    {/* console.log("item: ", item); */}
                                     return (
                                         <li key={item._id}>
                                             <p>{item.name}</p>
-                                            <div>
+                                            <QuantityWrapper>
                                                 <span>QTY: {item.numToBuy}</span>
-                                                <QuantityBtns itemQuantity={item.numToBuy} setItemQuantity={changeState}/>
-                                            </div>
-                                            <div>
+                                                <QuantityBtns 
+                                                    handleMinusClick={() => subtractQuantity(item._id)} 
+                                                    handleInputChange={changeQuantity} 
+                                                    handlePlusClick={addQuantity} 
+                                                    itemQuantity={item.numToBuy}
+                                                />
+                                            </QuantityWrapper>
+                                            <PriceWrapper>
                                                 <span>Price: {item.price}</span>
                                                 <span>Total: ${Number(item.price.slice(1)) * item.numToBuy}</span>
-                                            </div>
+                                            </PriceWrapper>
+                                            <RemoveBtn onClick={handleBtnClick}>Remove</RemoveBtn>
                                         </li>
                                     )
                                 })}
                             </ol>
                             <div>
                                 <p>Total:</p>
-                                <p>${cart.reduce((acc,item) => acc + Number(item.price.slice(1)) * item.numToBuy, 0)}</p>
+                                <p>${state.reduce((acc,item) => acc + Number(item.price.slice(1)) * item.numToBuy, 0)}</p>
                             </div>
                     </Wrapper>
                 : <h2>Loading...</h2>}
@@ -68,7 +81,7 @@ const Wrapper = styled.div`
     flex-direction: column;
     align-items: left;
     margin: 50px auto;
-    width: 400px;
+    width: 700px;
     height: 500px;
     color: var(--color-blackfont-text);
     font-family: var(--font-text);
@@ -85,13 +98,7 @@ const Wrapper = styled.div`
         justify-content: space-between;
         margin-bottom: 20px;
         p {
-            width: 60%;
-        }
-        div {
-            width: 30%;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
+            width: 40%;
         }
     }
     & > div {
@@ -102,6 +109,21 @@ const Wrapper = styled.div`
         font-size: 1.5rem;
     }
 `
-
+const QuantityWrapper = styled.div`
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+`
+const PriceWrapper = styled.div`
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+`
+const RemoveBtn = styled.button`
+    width: 10%;
+    cursor: pointer;
+`
 
 export default Cart;

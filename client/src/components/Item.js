@@ -64,6 +64,19 @@ const Item = ({userId}) => {
             })
             
     }
+    const handleInputChange = (e) => {
+        if (e.target.value >= 0) {
+            setItemQuantity(Number(e.target.value));
+        }
+    }
+    const handleMinusClick = (e) => {
+        if (itemQuantity > 0) {
+            setItemQuantity(itemQuantity - 1);
+        }
+    }
+    const handlePlusClick = (e) => {
+        setItemQuantity(itemQuantity + 1);
+    }
     
 
     return (
@@ -76,7 +89,9 @@ const Item = ({userId}) => {
                         <img src={itemData.imageSrc} alt={itemData.name}/>
                         {itemData.numInStock > 0
                             ?   <QuantityBtns 
-                                    setItemQuantity={setItemQuantity}
+                                    handleInputChange={handleInputChange}
+                                    handleMinusClick={handleMinusClick}
+                                    handlePlusClick={handlePlusClick}
                                     itemQuantity={itemQuantity}
                                 />
                             : <p>Out of stock.</p>

@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import GlobalStyles from "./GlobalStyles";
+import { CartContext } from "./CartContext";
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -13,15 +14,25 @@ import Confirmation from "./Confirmation";
 import Category from "./Category";
 
 function App() {
-  // const [itemsCategory, setItemsCategory] = useState(null);
-
-  // useEffect(() => {
-  //   fetch("/")
-  //     .then((res) => res.json())
-  //     .then((data) => setBacon(data));
-  // }, []);
 
   const userId = "JimmyBuyMore@realcustomer.ca";
+  const {
+          actions: { receiveCartInfoFromServer }
+        } = useContext(CartContext);
+
+  useEffect(() => {
+    fetch(`/api/get-cart/${userId}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.status !== 200) {
+          window.alert(data.message);
+          throw new Error(data.message);
+        }
+        console.log("in fetch: ", data.data);
+        receiveCartInfoFromServer(data.data);
+      })
+  }, []);
+
   return (
     <div className="App">
       <BrowserRouter>
