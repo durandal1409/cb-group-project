@@ -17,7 +17,7 @@ const Cart = ({userId}) => {
 
     const handleChange = (e, itemId, action) => {
         // setIsFetching(true);
-        action(itemId);
+        action(e, itemId);
         // fetch("/api/update-cart", {
         //     method: "PATCH",
         //     headers: {

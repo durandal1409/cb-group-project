@@ -20,25 +20,26 @@ const reducer = (state, action) => {
             return state = state.filter(item => item !== action.item)
         } case "change-quantity": {
             console.log("state in change-quantity: ", state)
-            return state.map((item, ind) => {
-                if(item._id === action.itemId) {
-                    state[ind].numToBuy = Number(action.event.target.value);
+            return state.map(item => {
+                if(item._id === action.itemId && item.numToBuy > 1) {
+                    item.numToBuy = Number(action.event.target.value);
                 }
                 return item;
             });
         } case "add-quantity": {
             console.log("state in add-quantity: ", state)
-            return state.map((item, ind) => {
-                if(item._id === action.itemId && state[ind].numToBuy > 1) {
-                    state[ind].numToBuy ++;
+            return state.map(item => {
+                if(item._id === action.itemId) {
+                    item.numToBuy++;
                 }
+                console.log("item: ", item)
                 return item;
             });
         } case "subtract-quantity": {
             console.log("state in subtract-quantity: ", state)
-            return state.map((item, ind) => {
-                if(item._id === action.itemId && state[ind].numToBuy > 1) {
-                    state[ind].numToBuy --;
+            return state.map(item => {
+                if(item._id === action.itemId && item.numToBuy > 1) {
+                    item.numToBuy--;
                 }
                 return state
             });
@@ -64,11 +65,11 @@ export const CartProvider = ({children}) => {
     const changeQuantity = (event, itemId) => {
         dispatch({type: "change-quantity", event, itemId})
     }
-    const addQuantity = (itemId) => {
-        dispatch({type: "add-quantity", itemId})
+    const addQuantity = (event, itemId) => {
+        dispatch({type: "add-quantity", event, itemId})
     }
-    const subtractQuantity = (itemId) => {
-        dispatch({type: "subtract-quantity", itemId})
+    const subtractQuantity = (event, itemId) => {
+        dispatch({type: "subtract-quantity", event, itemId})
     }
 
     return (

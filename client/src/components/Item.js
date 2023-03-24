@@ -65,7 +65,7 @@ const Item = ({userId}) => {
             
     }
     const handleInputChange = (e) => {
-        if (e.target.value >= 0) {
+        if (e.target.value > 0) {
             setItemQuantity(Number(e.target.value));
         }
     }
