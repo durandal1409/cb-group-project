@@ -55,9 +55,7 @@ export const CartProvider = ({children}) => {
                 receiveCartInfoFromServer,
                 addItem, 
                 removeItem,
-                changeQuantity,
-                addQuantity,
-                subtractQuantity
+                changeQuantity
             }}}>
             {children}
         </CartContext.Provider>
