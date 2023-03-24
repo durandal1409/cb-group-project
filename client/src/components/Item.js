@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import QuantityBtns from './QuantityBtns';
+import { CartContext } from "./CartContext";
 
 const Item = ({userId}) => {
 
@@ -9,6 +10,10 @@ const Item = ({userId}) => {
     const [itemData, setItemData] = useState(null);
     const [companyData, setCompanyData] = useState(null);
     const [itemQuantity, setItemQuantity] = useState(1);
+    // enable/disable button AddToCart
+    const [isFetching, setIsFetching] = useState(false);
+    const {actions: { addItem }
+    } = useContext(CartContext);
 
     // we need to receive item
     // and then fetch company with the companyId from item object
@@ -33,13 +38,14 @@ const Item = ({userId}) => {
         fetchItemAndCompany();
     }, []);
 
-    const handleClick = (e) => {
+    const handleAddToCart = (e) => {
         // check if the stock has the required quantity 
         if (itemQuantity > itemData.numInStock) {
             window.alert(`The seller only has ${itemData.numInStock} items.`);
-            setItemQuantity(0);
+            setItemQuantity(1);
             return
         }
+        setIsFetching(true);
         fetch("/api/add-to-cart", {
             method: "POST",
             headers: {
@@ -47,14 +53,17 @@ const Item = ({userId}) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                _id: itemData._id, 
-                numToBuy: itemQuantity,
-                userEmail: userId
+                _id: userId,
+                itemId: itemData.itemId,
+                numToBuy: itemQuantity
             })
         })
             .then(res => res.json())
             .then(data => {
+                setIsFetching(false);
                 if (data.status === 201) {
+                    // reducer function that changes the context
+                    addItem(data.data)
                 } else {
                     window.alert(data.message)
                 }
@@ -64,9 +73,13 @@ const Item = ({userId}) => {
             })
             
     }
+
+    // buttons and input handlers, change only local state
     const handleInputChange = (e) => {
         if (e.target.value > 0) {
             setItemQuantity(Number(e.target.value));
+        } else {
+            setItemQuantity(1)
         }
     }
     const handleMinusClick = (e) => {
@@ -97,7 +110,7 @@ const Item = ({userId}) => {
                             : <p>Out of stock.</p>
                         }
                         
-                        <button onClick={handleClick}>Add To Cart</button>
+                        <button onClick={handleAddToCart} disabled={isFetching}>Add To Cart</button>
                     </div>
                 :   <h2>Loading...</h2>
             }

@@ -1,15 +1,21 @@
 import styled from "styled-components";
 
-const QuantityBtns = ({handleMinusClick, handleInputChange, handlePlusClick, itemQuantity}) => {
+const QuantityBtns = ({
+        handleMinusClick, 
+        handleInputChange, 
+        handlePlusClick, 
+        itemQuantity,
+        disabled
+      }) => {
 
    
     
     return (
         <Wrapper>
             <ButtonDiv>
-                <Button onClick={handleMinusClick}>-</Button>
-                <Number type="number" value={itemQuantity} onChange={handleInputChange} />
-                <Button onClick={handlePlusClick}>+</Button>
+                <Button disabled={disabled} onClick={handleMinusClick}>-</Button>
+                <Number disabled={disabled} type="number" value={itemQuantity} onChange={handleInputChange} />
+                <Button disabled={disabled} onClick={handlePlusClick}>+</Button>
             </ButtonDiv>
         </Wrapper>
     )
@@ -36,7 +42,7 @@ const Number = styled.input`
   border-right: 2px solid #f5f5f5;
   border-color: grey;
   padding: 0px 8px;
-  width: 7vh;
+  width: 12vh;
   text-align: center;
 `;
 const ButtonDiv = styled.div`
