@@ -18,7 +18,9 @@ const {addToBoughtItems} = require("./handlers/addToBoughtItems")
 const {updateCart} = require("./handlers/updateCart")
 const {deleteCartItem} = require("./handlers/deleteCartItem")
 const {deleteBoughtItem} = require("./handlers/deleteBoughtItem")
-const {deleteConfirmation} = require("./handlers/deleteConfirmation")
+const {deleteConfirmation} = require("./handlers/deleteConfirmation");
+const { getBodyLocation } = require('./handlers/getBodyLocation');
+const { getPrices } = require('./handlers/getPrices');
 
 express()
   .use(function(req, res, next) {
@@ -47,6 +49,14 @@ express()
   .get("/api/get-cart/:useremail", getCart)
   .get("/api/get-bought-items/:useremail", getBoughtItems)
   .get("/api/get-confirmation", getConfirmation)
+
+/// BodyLocation, Prices and Categories endpoints ///
+
+.get("/api/get-bodylocation", getBodyLocation)
+.get("/api/get-prices", getPrices)
+.get("/api/get-categories", getCompanies)
+
+/// BodyLocation, Prices and Categories endpoints ///
 
   .post("/api/add-to-cart", addToCart)
   .post("/api/add-to-bought-items", addToBoughtItems)
