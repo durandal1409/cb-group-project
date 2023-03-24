@@ -17,31 +17,14 @@ const reducer = (state, action) => {
                 action.item,
             ]
         } case "remove-item": {
-            return state = state.filter(item => item !== action.item)
+            console.log("state in remove-item: ", state)
+            return state.filter(item => item.itemId !== action.itemId)
         } case "change-quantity": {
-            console.log("state in change-quantity: ", state)
             return state.map(item => {
-                if(item._id === action.itemId && item.numToBuy > 1) {
-                    item.numToBuy = Number(action.event.target.value);
+                if(item.itemId === action.data.itemId) {
+                    item.numToBuy = Number(action.data.numToBuy);
                 }
                 return item;
-            });
-        } case "add-quantity": {
-            console.log("state in add-quantity: ", state)
-            return state.map(item => {
-                if(item._id === action.itemId) {
-                    item.numToBuy++;
-                }
-                console.log("item: ", item)
-                return item;
-            });
-        } case "subtract-quantity": {
-            console.log("state in subtract-quantity: ", state)
-            return state.map(item => {
-                if(item._id === action.itemId && item.numToBuy > 1) {
-                    item.numToBuy--;
-                }
-                return state
             });
         } default: {
             throw new Error("unrecognized action: " + action.type);
@@ -51,25 +34,18 @@ const reducer = (state, action) => {
 }
 export const CartProvider = ({children}) => {
     const [state, dispatch] = useReducer(reducer, initialState);
-
+    console.log("state in provider: ", state);
     const receiveCartInfoFromServer = (data) => {
-        
         dispatch({type: "receive-cart-info-from-server", data});
     }
-    const addItem = (data) => {
-        dispatch({type: "add-item", ...data})
+    const addItem = (item) => {
+        dispatch({type: "add-item", item})
     }
-    const removeItem = (data) => {
-        dispatch({type: "remove-item"})
+    const removeItem = (itemId) => {
+        dispatch({type: "remove-item", itemId})
     }
-    const changeQuantity = (event, itemId) => {
-        dispatch({type: "change-quantity", event, itemId})
-    }
-    const addQuantity = (event, itemId) => {
-        dispatch({type: "add-quantity", event, itemId})
-    }
-    const subtractQuantity = (event, itemId) => {
-        dispatch({type: "subtract-quantity", event, itemId})
+    const changeQuantity = (data) => {
+        dispatch({type: "change-quantity", data})
     }
 
     return (
