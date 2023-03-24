@@ -27,9 +27,11 @@ function App() {
           window.alert(data.message);
           throw new Error(data.message);
         }
-        console.log("in fetch: ", data.data);
         receiveCartInfoFromServer(data.data);
-      });
+      })
+      .catch((error) => {
+        window.alert(error);
+    })
   }, []);
 
   return (
