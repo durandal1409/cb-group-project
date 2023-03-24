@@ -27,7 +27,7 @@ const getCart = async (req,res) => {
     
     // if the request turns an empty array, it is presumed that the user in the params does not have a cart
     if(result.length === 0){
-      res.status(500).json({ status: 500, data: query, message: "This user does not currently have a cart" });
+      res.status(404).json({ status: 404, data: query, message: "This user does not currently have a cart" });
     }
     //else all their items are returned
     else{
