@@ -63,19 +63,20 @@ const Item = ({userId}) => {
                 setIsFetching(false);
                 if (data.status === 201) {
                     // reducer functions that change the context
-                    state.find(item => {
-                        console.log("s: ", state, item, item.itemId, Number(itemData._id))
-                        return Number(item.itemId) === Number(itemData._id)
-                    })
+                    // console.log("f: ", state.find(item => {
+                    //     console.log("item: ", item, itemData)
+                    //     return Number(item.itemId) === Number(itemData._id)
+                    // }))
                     if (state.find(item => Number(item.itemId) === Number(itemData._id))) {
                         console.log("change");
                         changeQuantity(data.data.numToBuy, itemId)
                     } else {
-                        console.log("add");
-                        addItem(data.data.cart[0])
+                        console.log("add", data.data);
+                        addItem(data.data)
                     }
                     setItemQuantity(1)
                 } else {
+                    // console.log("ddd: ", data);
                     window.alert(data.message)
                 }
             })
@@ -112,16 +113,18 @@ const Item = ({userId}) => {
                         <h2>{itemData.price}</h2>
                         <img src={itemData.imageSrc} alt={itemData.name}/>
                         {itemData.numInStock > 0
-                            ?   <QuantityBtns 
-                                    handleInputChange={handleInputChange}
-                                    handleMinusClick={handleMinusClick}
-                                    handlePlusClick={handlePlusClick}
-                                    itemQuantity={itemQuantity}
-                                />
+                            ?   <>
+                                    <QuantityBtns 
+                                        handleInputChange={handleInputChange}
+                                        handleMinusClick={handleMinusClick}
+                                        handlePlusClick={handlePlusClick}
+                                        itemQuantity={itemQuantity}
+                                    />
+                                    <button onClick={handleAddToCart} disabled={isFetching}>Add To Cart</button>
+                                </>
                             : <p>Out of stock.</p>
                         }
                         
-                        <button onClick={handleAddToCart} disabled={isFetching}>Add To Cart</button>
                     </div>
                 :   <h2>Loading...</h2>
             }
