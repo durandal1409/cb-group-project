@@ -20,11 +20,13 @@ const Cart = ({userId}) => {
         if (action === "plus") {
             currNumToBuy++
             return currNumToBuy
-        } else if (action === "minus" && currNumToBuy > 1) {
-            currNumToBuy--
+        } else if (action === "minus") {
+            if (currNumToBuy > 1) {
+                currNumToBuy--
+            }
             return currNumToBuy
         } else if (action === "input"){
-            if (currNumToBuy > 1) {
+            if (currNumToBuy > 0) {
                 return Number(e.target.value)
             } else {
                 return 1

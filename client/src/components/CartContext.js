@@ -21,10 +21,8 @@ const reducer = (state, action) => {
             return state.filter(item => item.itemId !== action.itemId)
         } case "change-quantity": {
             return state.map(item => {
-                console.log("st: ", action.numToBuy, typeof action.numToBuy, typeof item.numToBuy)
-
-                if(item.itemId === Number(action.itemId)) {
-                    item.numToBuy = Number(action.numToBuy);
+                if(item.itemId === Number(action.item.itemId)) {
+                    item.numToBuy = Number(action.item.numToBuy);
                 }
                 return item;
             });
@@ -46,8 +44,8 @@ export const CartProvider = ({children}) => {
     const removeItem = (itemId) => {
         dispatch({type: "remove-item", itemId})
     }
-    const changeQuantity = (numToBuy, itemId) => {
-        dispatch({type: "change-quantity", numToBuy, itemId})
+    const changeQuantity = (item) => {
+        dispatch({type: "change-quantity", item})
     }
 
     return (
