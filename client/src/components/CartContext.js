@@ -26,6 +26,8 @@ const reducer = (state, action) => {
                 }
                 return item;
             });
+        } case "empty-cart": {
+            return [];
         } default: {
             throw new Error("unrecognized action: " + action.type);
         }
@@ -47,6 +49,9 @@ export const CartProvider = ({children}) => {
     const changeQuantity = (item) => {
         dispatch({type: "change-quantity", item})
     }
+    const emptyCart = () => {
+        dispatch({type: "empty-cart"})
+    }
 
     return (
         <CartContext.Provider value={
@@ -55,7 +60,8 @@ export const CartProvider = ({children}) => {
                 receiveCartInfoFromServer,
                 addItem, 
                 removeItem,
-                changeQuantity
+                changeQuantity,
+                emptyCart
             }}}>
             {children}
         </CartContext.Provider>
