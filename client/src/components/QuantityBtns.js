@@ -1,21 +1,12 @@
 import styled from "styled-components";
 
-const QuantityBtns = ({
-        handleMinusClick, 
-        handleInputChange, 
-        handlePlusClick, 
-        itemQuantity,
-        disabled
-      }) => {
-
-   
-    
+const QuantityBtns = ({handleQuantityChange, itemQuantity, disabled, itemId}) => {
     return (
         <Wrapper>
             <ButtonDiv>
-                <Button disabled={disabled} onClick={handleMinusClick}>-</Button>
-                <Number disabled={disabled} type="number" value={itemQuantity} onChange={handleInputChange} />
-                <Button disabled={disabled} onClick={handlePlusClick}>+</Button>
+                <Button disabled={disabled} onClick={(e) => handleQuantityChange(e, "minus", itemId)}>-</Button>
+                <Number disabled={disabled} type="number" value={itemQuantity} onChange={(e) => handleQuantityChange(e, "input", itemId)} />
+                <Button disabled={disabled} onClick={(e) => handleQuantityChange(e, "plus", itemId)}>+</Button>
             </ButtonDiv>
         </Wrapper>
     )

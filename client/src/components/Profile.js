@@ -32,9 +32,6 @@ const Profile = () => {
       });
   }, []);
 
-  // console.log("company: ", companyData);
-  // console.log("items: ", items);
-
   return (
     <Wrapper>
       {companyData ? (

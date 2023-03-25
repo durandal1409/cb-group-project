@@ -5,7 +5,7 @@ import QuantityBtns from './QuantityBtns';
 import { CartContext } from "./CartContext";
 
 const Cart = ({userId, setOrderId}) => {
-    // enable/disable btns and input
+    // disable btns and input while fetching
     const [isFetching, setIsFetching] = useState(false);
     const {
         state, 
@@ -17,7 +17,7 @@ const Cart = ({userId, setOrderId}) => {
     } = useContext(CartContext);
     const navigate = useNavigate();
 
-    // calculating the numToBuy to send it to the BE
+    // calculating the quantity of one item to send it to the BE
     const newNumToBuy = (e, itemId, action) => {
         let currNumToBuy = state.find(item => item.itemId === itemId).numToBuy;
         if (action === "plus") {
@@ -36,7 +36,10 @@ const Cart = ({userId, setOrderId}) => {
             }
         }
     }
-    const handleQuantityChange = (e, itemId, action) => {
+
+    // sending new quantity data to BE
+    // and changing cart data in context after receiving response
+    const handleQuantityChange = (e, action, itemId) => {
         setIsFetching(true);
         const numToBuy = newNumToBuy(e, itemId, action);
         fetch("/api/update-cart", {
@@ -53,12 +56,12 @@ const Cart = ({userId, setOrderId}) => {
         })
         .then(res => res.json())
         .then((data) => {
-            setIsFetching(false);
-            if (data.status === 200) {
-                changeQuantity(data.data);
-            } else {
-                window.alert(data.message);
-            }
+                setIsFetching(false);
+                if (data.status === 200) {
+                    changeQuantity(data.data);
+                } else {
+                    window.alert(data.message);
+                }
             })
         .catch((error) => {
             window.alert(error);
@@ -66,6 +69,8 @@ const Cart = ({userId, setOrderId}) => {
     
     }
 
+    // sending info about removed item to the BE
+    // and changing cart data in context after receiving response 
     const handleRemove = (itemId) => {
         setIsFetching(true);
         
@@ -93,6 +98,10 @@ const Cart = ({userId, setOrderId}) => {
                 window.alert(error);
             })
     }
+
+    // sending purchase info to the BE
+    // emptying cart after responce
+    // and navigating to confirmation page
     const handleBuy = () => {
         setIsFetching(true);
         fetch("/api/add-to-bought-items", {
@@ -136,11 +145,10 @@ const Cart = ({userId, setOrderId}) => {
                                         <QuantityWrapper>
                                             <span>QTY:</span>
                                             <QuantityBtns 
-                                                handleMinusClick={(e) => handleQuantityChange(e, item.itemId, "minus")} 
-                                                handleInputChange={(e) => handleQuantityChange(e, item.itemId, "input")} 
-                                                handlePlusClick={(e) => handleQuantityChange(e, item.itemId, "plus")} 
+                                                handleQuantityChange={handleQuantityChange} 
                                                 itemQuantity={state[ind].numToBuy}
                                                 disabled={isFetching}
+                                                itemId={item.itemId}
                                             />
                                         </QuantityWrapper>
                                         <PriceWrapper>

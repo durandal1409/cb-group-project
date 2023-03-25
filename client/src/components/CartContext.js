@@ -11,13 +11,11 @@ const reducer = (state, action) => {
             return [...action.data]
         }
         case "add-item": {
-            console.log("state in add-item: ", state, action.item)
             return [
                 ...state,
                 action.item,
             ]
         } case "remove-item": {
-            console.log("state in remove-item: ", state)
             return state.filter(item => item.itemId !== action.itemId)
         } case "change-quantity": {
             return state.map(item => {
@@ -36,7 +34,6 @@ const reducer = (state, action) => {
 }
 export const CartProvider = ({children}) => {
     const [state, dispatch] = useReducer(reducer, initialState);
-    console.log("state in provider: ", state);
     const receiveCartInfoFromServer = (data) => {
         dispatch({type: "receive-cart-info-from-server", data});
     }

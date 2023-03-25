@@ -3,21 +3,23 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import QuantityBtns from "./QuantityBtns";
 import { CartContext } from "./CartContext";
+import { useNavigate } from "react-router-dom";
 
 const Item = ({ userId }) => {
   const { itemId } = useParams();
   const [itemData, setItemData] = useState(null);
   const [companyData, setCompanyData] = useState(null);
   const [itemQuantity, setItemQuantity] = useState(1);
-  // enable/disable button AddToCart
+  // disables button AddToCart while fetching
   const [isFetching, setIsFetching] = useState(false);
   const {
     state,
     actions: { addItem, changeQuantity },
   } = useContext(CartContext);
+  const navigate = useNavigate();
 
-  // we need to receive item
-  // and then fetch company with the companyId from item object
+  // fetching item data
+  // and after that fetch company with the companyId from item
   const fetchItemAndCompany = async () => {
     const item = await fetch(`/api/get-item/${itemId}`).then((res) =>
       res.json()
@@ -41,6 +43,8 @@ const Item = ({ userId }) => {
     fetchItemAndCompany();
   }, []);
 
+  // sending item data to BE
+  // and changing cart data in context after receiving response
   const handleAddToCart = (e) => {
     // check if the stock has the required quantity
     if (itemQuantity > itemData.numInStock) {
@@ -48,6 +52,7 @@ const Item = ({ userId }) => {
       setItemQuantity(1);
       return;
     }
+    // disable btns
     setIsFetching(true);
     fetch("/api/add-to-cart", {
       method: "POST",
@@ -63,25 +68,21 @@ const Item = ({ userId }) => {
     })
       .then((res) => res.json())
       .then((data) => {
+        // enable btns
         setIsFetching(false);
         if (data.status === 201) {
-          // reducer functions that change the context
-          // console.log("f: ", state.find(item => {
-          //     console.log("item: ", item, itemData)
-          //     return Number(item.itemId) === Number(itemData._id)
-          // }))
+          // if item already in cart then change quantity
+          // otherwise add new item to the cart
           if (
             state.find((item) => Number(item.itemId) === Number(itemData._id))
           ) {
-            console.log("change");
-            changeQuantity(data.data.numToBuy, itemId);
+            changeQuantity(data.data);
           } else {
-            console.log("add", data.data);
             addItem(data.data);
           }
+          // reset input
           setItemQuantity(1);
         } else {
-          // console.log("ddd: ", data);
           window.alert(data.message);
         }
       })
@@ -91,21 +92,25 @@ const Item = ({ userId }) => {
   };
 
   // buttons and input handlers, change only local state
-  const handleInputChange = (e) => {
-    if (e.target.value > 0) {
-      setItemQuantity(Number(e.target.value));
-    } else {
-      setItemQuantity(1);
+  const handleQuantityChange = (e, action) => {
+    if (action === "plus") {
+      setItemQuantity(itemQuantity + 1);
+    } else if (action === "minus") {
+      if (itemQuantity > 1) {
+        setItemQuantity(itemQuantity - 1);
+      }
+    } else if (action === "input"){
+      if (e.target.value > 0) {
+        setItemQuantity(Number(e.target.value));
+      } else {
+        setItemQuantity(1);
+      }
     }
+      
   };
-  const handleMinusClick = (e) => {
-    if (itemQuantity > 1) {
-      setItemQuantity(itemQuantity - 1);
-    }
-  };
-  const handlePlusClick = (e) => {
-    setItemQuantity(itemQuantity + 1);
-  };
+  const handleCompanyClick = (e) => {
+    navigate(`/company-profile/${companyData._id}`);
+}
 
   return (
     <Wrapper>
@@ -114,14 +119,13 @@ const Item = ({ userId }) => {
           {itemData.numInStock > 0 ? (
             <ToCart>
               <QuantityBtns
-                handleInputChange={handleInputChange}
-                handleMinusClick={handleMinusClick}
-                handlePlusClick={handlePlusClick}
+                handleQuantityChange={handleQuantityChange}
                 itemQuantity={itemQuantity}
               />
               <ButtonCart onClick={handleAddToCart} disabled={isFetching}>
                 Add To Cart
               </ButtonCart>
+              {/* <h3>Item added to the cart.</h3> */}
             </ToCart>
           ) : (
             <p>Out of stock.</p>
@@ -136,10 +140,10 @@ const Item = ({ userId }) => {
         <h2>Loading...</h2>
       )}
       {companyData ? (
-        <Location>
+        <Location onClick={handleCompanyClick}>
           <h3>Seller: </h3>
           <p>{companyData.name}</p>
-          <a href={companyData.url}>{companyData.url}</a>
+          <a href={companyData.url} onClick={e => e.stopPropagation()}>{companyData.url}</a>
           <p>Country: {companyData.country}</p>
         </Location>
       ) : (
@@ -205,7 +209,7 @@ const ButtonCart = styled.button`
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
+    /* width: 100%; */
     height: 100%;
     transition: 1s all;
     opacity: 0;
@@ -233,6 +237,11 @@ const Location = styled.div`
   height: 360px;
   box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
     rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+  cursor: pointer;
+  transition: 0.5s ease-in-out;
+  :hover {
+    transform: translateY(10px);
+  }
   h3 {
     font-size: 25px;
     box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px;
