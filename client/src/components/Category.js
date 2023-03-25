@@ -160,7 +160,7 @@ const DiscoverItem = styled.div`
     opacity: 1;
     background: linear-gradient(
       to top,
-      rgba(0, 204, 255, 0.1),
+      rgba(89, 89, 89, 0.3),
       rgba(255, 255, 255, 0.1)
     );
   }
