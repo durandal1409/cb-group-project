@@ -24,14 +24,13 @@ const SmallItem = ({ item }) => {
 const StyledLink = styled(Link)`
   display: grid;
   position: relative;
-  grid-template-columns: repeat(4, 20%);
   place-items: center;
   border-style: solid;
   border-color: black;
   border-radius: 5px;
-  width: 280px;
+  width: 300px;
   height: 360px;
-  transition: 0.5s ease-in-out;
+  transition: 1s ease-in-out;
   box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
     rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 
@@ -48,27 +47,24 @@ const StyledLink = styled(Link)`
     width: 100%;
     height: 100%;
     transition: 0.5s all;
-    opacity: 1;
+    opacity: 0;
     background: linear-gradient(
-      to top,
-      rgba(89, 89, 89, 0.3),
-      rgba(255, 255, 255, 0.1)
+      to bottom,
+      rgba(0, 204, 255, 0.1),
+      rgba(191, 128, 64, 0.3)
     );
   }
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    position: absolute;
-    border-radius: 5px;
-    border-style: solid;
-    border-width: 1px;
-    border-color: black;
+  :hover:after {
+    opacity: 1;
+  }
+  :hover button {
+    color: white;
   }
   button {
     width: 130px;
     transition: 1s all;
     border-style: none;
+    border-radius: 5px;
     padding: 5px;
     position: absolute;
     bottom: 5px;

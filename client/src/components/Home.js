@@ -48,7 +48,7 @@ const Home = () => {
         {itemsArr &&
           itemsArr.map((randomItem) => {
             return (
-              <DiscoverItem key={randomItem._id}>
+              <DiscoverItem to={`/item/${randomItem._id}`} key={randomItem._id}>
                 <img src={randomItem.imageSrc} />
 
                 <button onClick={() => navigate(`/item/${randomItem._id}`)}>
@@ -104,11 +104,10 @@ const Wrapper = styled.div`
   width: 100%;
   padding: 30px 50px 60px 50px;
 `;
-const DiscoverItem = styled.div`
+const DiscoverItem = styled(Link)`
   display: grid;
   position: relative;
   place-items: center;
-  border-style: solid;
   border-color: black;
   border-radius: 5px;
   width: 280px;
@@ -130,29 +129,24 @@ const DiscoverItem = styled.div`
     width: 100%;
     height: 100%;
     z-index: 2;
-    transition: 0.5s all;
+    transition: 1s all;
     opacity: 0;
     background: linear-gradient(
       to bottom,
-      rgba(0, 204, 255, 0.3),
-      rgba(191, 128, 64, 0.75)
+      rgba(0, 204, 255, 0.1),
+      rgba(191, 128, 64, 0.3)
     );
   }
   :hover:after {
     opacity: 1;
   }
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    position: absolute;
-    border-radius: 5px;
-  }
+
   button {
     width: 130px;
     transition: 1s all;
     border-style: none;
     padding: 5px;
+    border-radius: 5px;
     position: absolute;
     bottom: 5px;
     z-index: 10;
