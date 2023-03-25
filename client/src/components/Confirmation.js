@@ -4,48 +4,38 @@ import styled from "styled-components";
 const Confirmation = ({orderId}) => {
     const [order, setOrder] = useState(null);
 
-    // useEffect(() => {
-    //     // TODO:
-    //     // change the endpoint?
-    //     fetch(`/api/get-order/${orderId}`)
-    //         .then(res => res.json())
-    //         .then(data => {
-    //             if(data.status !== 200) {
-    //                 window.alert(data.message);
-    //                 throw new Error(data.message);
-    //             } else setOrder(data.data)
-    //         })
-    // }, [])
+    useEffect(() => {
+        fetch(`/api/get-bought-items/${orderId}`)
+            .then(res => res.json())
+            .then(data => {
+                if(data.status !== 200) {
+                    window.alert(data.message);
+                    throw new Error(data.message);
+                } else setOrder(data.data.cart)
+            })
+    }, [])
     return (
         <>
-            {/* TODO:
-            change true to order */}
-            {true
+            {order
                 ?   <Wrapper>
                         <h1>Your order is confirmed!</h1>
-                        {/* TODO:
-                            add order details */}
                             <ol>
-                                <li>
-                                    <p>"Barska GB12166 Fitness Watch with Heart Rate Monitor"</p>
-                                    <div>
-                                        <span>Price: $7.00</span>
-                                        <span>QTY: 2</span>
-                                        <span>Total: $14.00</span>
-                                    </div>
-                                </li>
-                                <li>
-                                    <p>"Barska GB12166 Fitness Watch with Heart Rate Monitor"</p>
-                                    <div>
-                                        <span>Price: $7.00</span>
-                                        <span>QTY: 2</span>
-                                        <span>Total: $14.00</span>
-                                    </div>
-                                </li>
+                                {order.map(item => {
+                                    return (
+                                        <li key={item.itemId}>
+                                            <p>{item.name}</p>
+                                            <div>
+                                                <span>Price: {item.price}</span>
+                                                <span>QTY: {item.numBought}</span>
+                                                <span>Total: ${(Number(item.price.slice(1)) * item.numBought).toFixed(2)}</span>
+                                            </div>
+                                        </li>
+                                    )
+                                })}
                             </ol>
                             <div>
                                 <p>Total:</p>
-                                <p>$28.00</p>
+                                <p>${(order.reduce((acc,item) => acc + Number(item.price.slice(1)) * item.numBought, 0)).toFixed(2)}</p>
                             </div>
                     </Wrapper>
                 : <h2>Loading...</h2>}

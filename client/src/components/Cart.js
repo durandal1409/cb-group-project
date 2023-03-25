@@ -1,18 +1,21 @@
 import { useState, useEffect, useContext } from 'react';
+import { useNavigate } from "react-router-dom"
 import styled from "styled-components";
 import QuantityBtns from './QuantityBtns';
 import { CartContext } from "./CartContext";
 
-const Cart = ({userId}) => {
+const Cart = ({userId, setOrderId}) => {
     // enable/disable btns and input
     const [isFetching, setIsFetching] = useState(false);
     const {
         state, 
         actions: { 
             removeItem,
-            changeQuantity
+            changeQuantity,
+            emptyCart
         }
     } = useContext(CartContext);
+    const navigate = useNavigate();
 
     // calculating the numToBuy to send it to the BE
     const newNumToBuy = (e, itemId, action) => {
@@ -36,7 +39,6 @@ const Cart = ({userId}) => {
     const handleQuantityChange = (e, itemId, action) => {
         setIsFetching(true);
         const numToBuy = newNumToBuy(e, itemId, action);
-        console.log("num: ", numToBuy)
         fetch("/api/update-cart", {
             method: "PATCH",
             headers: {
@@ -58,9 +60,9 @@ const Cart = ({userId}) => {
                 window.alert(data.message);
             }
             })
-            .catch((error) => {
-                window.alert(error);
-            })
+        .catch((error) => {
+            window.alert(error);
+        })
     
     }
 
@@ -86,6 +88,33 @@ const Cart = ({userId}) => {
                 } else {
                     window.alert(data.message);
                 }
+            })
+            .catch((error) => {
+                window.alert(error);
+            })
+    }
+    const handleBuy = () => {
+        setIsFetching(true);
+        fetch("/api/add-to-bought-items", {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "_id": userId
+            })
+        })
+        .then(res => res.json())
+        .then((data) => {
+            setIsFetching(false);
+            if (data.status === 201) {
+                setOrderId(data.data._id);
+                emptyCart();
+                navigate(`/confirmation`);
+            } else {
+                window.alert(data.message);
+            }
             })
             .catch((error) => {
                 window.alert(error);
@@ -127,6 +156,7 @@ const Cart = ({userId}) => {
                             <p>Total:</p>
                             <p>${(state.reduce((acc,item) => acc + Number(item.price.slice(1)) * item.numToBuy, 0)).toFixed(2)}</p>
                         </div>
+                        <button onClick={handleBuy} disabled={isFetching}>Buy</button>
                     </>}
             </Wrapper>
         </>

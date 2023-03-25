@@ -66,7 +66,7 @@ const Header = () => {
             </Anchor>
           </List>
           <List>
-            <Anchor to={"/"}>
+            <Anchor to={"/cart"}>
               <AiOutlineShoppingCart />
             </Anchor>
           </List>

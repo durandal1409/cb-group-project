@@ -18,6 +18,7 @@ function App() {
   const {
     actions: { receiveCartInfoFromServer },
   } = useContext(CartContext);
+  const [orderId, setOrderId] = useState(null);
 
   useEffect(() => {
     fetch(`/api/get-cart/${userId}`)
@@ -48,8 +49,8 @@ function App() {
           <Route path="/item/:itemId" element={<Item userId={userId} />} />
           <Route path="/category/:category" element={<Category />} />
           <Route path="/company-profile/:companyId" element={<Profile />} />
-          <Route path="/cart" element={<Cart userId={userId} />} />
-          <Route path="/confirmation" element={<Confirmation />} />
+          <Route path="/cart" element={<Cart userId={userId} setOrderId={setOrderId}/>} />
+          <Route path="/confirmation" element={<Confirmation orderId={orderId}/>} />
           <Route path="*" element={<h1>404: Oops!</h1>} />
         </Routes>
         <Footer />
