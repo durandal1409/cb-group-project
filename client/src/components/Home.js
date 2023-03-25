@@ -3,37 +3,38 @@ import { useEffect, useState } from "react";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { AiOutlineUser } from "react-icons/ai";
 import styled from "styled-components";
-import items from "../assets/items.json";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
-  const [itemsArr, setItemArr] = useState([]);
+  const [itemsArr, setItemsArr] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    /*fetch("")
+    fetch(`/api/get-items`)
       .then((res) => res.json())
       .then((data) => {
-        setItemArr(data.data);
-        console.log(data);
+        if (data.status === 200) {
+          let randomIndexArray = [];
+          while (randomIndexArray.length < 6) {
+            const randomIndex = Math.floor(Math.random() * data.data.length);
+            if (!randomIndexArray.includes(randomIndex)) {
+              randomIndexArray.push(randomIndex);
+            }
+          }
+          setItemsArr(
+            randomIndexArray.map((randomIndex) => {
+              return data.data[randomIndex];
+            })
+          );
+        } else {
+          window.alert(data.message);
+          throw new Error(data.message);
+        }
       })
       .catch((error) => {
-        console.log(error);
-      });*/
-
-    let randomIndexArray = [];
-    while (randomIndexArray.length < 6) {
-      const randomIndex = Math.floor(Math.random() * items.length);
-      if (!randomIndexArray.includes(randomIndex)) {
-        randomIndexArray.push(randomIndex);
-      }
-    }
-
-    setItemArr(
-      randomIndexArray.map((randomIndex) => {
-        return items[randomIndex];
-      })
-    );
+        window.alert(error);
+    })
+    
   }, []);
 
   return (
