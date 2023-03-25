@@ -47,7 +47,7 @@ const Profile = () => {
         </Location>
       ) : (
         <h2>Loading...</h2>
-      )}{" "}
+      )}
       <div>
         {items ? (
           <SmallItemWrapper>
@@ -67,11 +67,11 @@ const Wrapper = styled.div`
   display: flex;
   position: relative;
   flex-direction: row;
+  justify-content: space-around;
+  flex-wrap: wrap;
   padding-left: 150px;
   padding-top: 20px;
   padding-bottom: 50px;
-  justify-content: space-around;
-  flex-wrap: wrap;
   width: 100%;
   gap: 15px;
   min-height: 400px;
@@ -81,8 +81,6 @@ const Location = styled.div`
   position: absolute;
   align-self: flex-start;
   place-items: center;
-  border-style: solid;
-  border-color: black;
   font-family: var(--Font-heading-title);
   font-weight: bold;
   font-size: 20px;
@@ -91,21 +89,30 @@ const Location = styled.div`
   height: 360px;
   top: 30px;
   left: 20px;
-  transition: 0.5s ease-in-out;
   box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
     rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+  h3 {
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px;
+  }
+  p {
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px;
+  }
+  a {
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px;
+  }
 `;
 const SmallItemWrapper = styled.div`
   display: flex;
   position: relative;
   flex-direction: row;
+  justify-content: space-around;
+  flex-wrap: wrap;
   padding-left: 110px;
   padding-top: 10px;
   padding-bottom: 50px;
-  justify-content: space-around;
-  flex-wrap: wrap;
   width: 100%;
-  gap: 15px;
+  row-gap: 10px;
+  column-gap: 0px;
   min-height: 400px;
 `;
 
