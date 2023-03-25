@@ -13,36 +13,39 @@ const Category = () => {
   console.log(category);
 
   useEffect(() => {
-    /*fetch("")
+    fetch(`/api/get-items`)
       .then((res) => res.json())
       .then((data) => {
-        setItemArr(data.data);
-        console.log(data);
+        if (data.status === 200) {
+          let locations = [];
+          data.data.forEach((item) => {
+            if (!locations.includes(item.body_location)) {
+              locations.push(item.body_location);
+            }
+          });
+          locations.sort();
+          setLocationArr(locations);
+
+          const categoryArray = data.data
+            .filter((item) => {
+              return item.category == category;
+            })
+            .filter((item) => {
+              if (bodyLocation.length) {
+                return item.body_location == bodyLocation;
+              }
+              return true;
+            });
+          setItemArr(categoryArray);
+        } else {
+          window.alert(data.message);
+          throw new Error(data.message);
+        }
       })
       .catch((error) => {
-        console.log(error);
-      });*/
-
-    let locations = [];
-    items.forEach((item) => {
-      if (!locations.includes(item.body_location)) {
-        locations.push(item.body_location);
-      }
-    });
-    locations.sort();
-    setLocationArr(locations);
-
-    const categoryArray = items
-      .filter((item) => {
-        return item.category == category;
+        window.alert(error);
       })
-      .filter((item) => {
-        if (bodyLocation.length) {
-          return item.body_location == bodyLocation;
-        }
-        return true;
-      });
-    setItemArr(categoryArray);
+    
   }, [category, bodyLocation]);
 
   return (
