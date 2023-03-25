@@ -23,6 +23,7 @@ const { getBodyLocation } = require('./handlers/getBodyLocation');
 const { getPrices } = require('./handlers/getPrices');
 const { getCategories } = require('./handlers/getCategories');
 
+
 express()
   .use(function(req, res, next) {
     res.header(
@@ -56,6 +57,7 @@ express()
 .get("/api/get-bodylocation", getBodyLocation)
 .get("/api/get-prices", getPrices)
 .get("/api/get-categories", getCategories)
+
 
 /// BodyLocation, Prices and Categories endpoints ///
 

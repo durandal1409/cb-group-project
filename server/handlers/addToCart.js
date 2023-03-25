@@ -62,12 +62,12 @@ const addToCart = async (req,res) => {
         const idExistsParsed = idExists[0].cart[0].itemId;
         const cartNumParsed = cartItemObject[0].numToBuy
 
-        if(numToBuy > stockAmount[0].numInStock || (stockAmount[0].numInStock - cartItemObject[0].numToBuy) < 0 ){
-          res.status(500).json({ status: 500, data: {Buying : numToBuy, InCart: cartItemObject[0].numToBuy, Stock: stockAmount[0].numInStock}, message: "The stock is too low to accomodate this request" });
+        if(numToBuy > stockAmount[0].numInStock || (stockParsed - cartNumParsed - numToBuy) < 0 ){
+          res.status(500).json({ status: 500, data: {Buying : numToBuy, InCart: cartNumParsed, Stock: stockParsed}, message: "The stock is too low to accomodate this request" });
         }
         else{
         const updateResult = await db.collection("Cart").updateOne({"cart.itemId":{$eq: itemId}},{$inc:{/*"cart.$.numInStock": -numToBuy ,*/"cart.$.numToBuy":numToBuy}});
-        res.status(201).json({ status: 201, data: {numToBuy: (cartNumParsed + numToBuy)}, message: "Item quantity updated in Cart!" });
+        res.status(201).json({ status: 201, data: {itemId: itemId, name: nameParsed, price: priceParsed, numToBuy: (cartNumParsed + numToBuy), numInStock: stockParsed}, message: "Item quantity updated in Cart!" });
         }
       }
       else{
@@ -77,7 +77,7 @@ const addToCart = async (req,res) => {
         let newSet = {$set:{itemId, name:nameParsed, price: priceParsed, numToBuy, numInStock: stockParsed}};
 
         const result = await db.collection("Cart").updateOne({"_id":{$eq: userEmail}}, {$addToSet:{"cart":newSet.$set}});
-        res.status(201).json({ status: 201, data: newSet.$set, message: "User exists and item added to Cart!" });
+        res.status(201).json({ status: 201, data: {itemId: itemId, name: nameParsed, price: priceParsed, numToBuy: numToBuy, numInStock: stockParsed}, message: "User exists and item added to Cart!" });
       }
     }
 
@@ -89,7 +89,7 @@ const addToCart = async (req,res) => {
       let newSet = {$set:{_id: userEmail, cart: [{itemId, name:nameParsed, price: priceParsed, numToBuy, numInStock: stockParsed}]}};
 
       const result = await db.collection("Cart").insertOne(newSet.$set);
-      res.status(201).json({ status: 201, data: newSet.$set, message: "User does not exist and item added to Cart!" });
+      res.status(201).json({ status: 201, data: {itemId: itemId, name: nameParsed, price: priceParsed, numToBuy: numToBuy, numInStock: stockParsed}, message: "User does not exist and item added to Cart!" });
     }
     
   }catch(err){

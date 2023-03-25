@@ -3,15 +3,15 @@ import { useReducer, createContext } from "react";
 
 export const CartContext = createContext();
 
-const initialState = null;
+const initialState = [];
 
 const reducer = (state, action) => {
     switch(action.type) {
         case "receive-cart-info-from-server": {
-            console.log("in reducer: ", action)
             return [...action.data]
         }
         case "add-item": {
+            console.log("state in add-item: ", state, action.item)
             return [
                 ...state,
                 action.item,
@@ -21,11 +21,13 @@ const reducer = (state, action) => {
             return state.filter(item => item.itemId !== action.itemId)
         } case "change-quantity": {
             return state.map(item => {
-                if(item.itemId === action.data.itemId) {
-                    item.numToBuy = Number(action.data.numToBuy);
+                if(item.itemId === Number(action.item.itemId)) {
+                    item.numToBuy = Number(action.item.numToBuy);
                 }
                 return item;
             });
+        } case "empty-cart": {
+            return [];
         } default: {
             throw new Error("unrecognized action: " + action.type);
         }
@@ -44,8 +46,11 @@ export const CartProvider = ({children}) => {
     const removeItem = (itemId) => {
         dispatch({type: "remove-item", itemId})
     }
-    const changeQuantity = (data) => {
-        dispatch({type: "change-quantity", data})
+    const changeQuantity = (item) => {
+        dispatch({type: "change-quantity", item})
+    }
+    const emptyCart = () => {
+        dispatch({type: "empty-cart"})
     }
 
     return (
@@ -55,7 +60,8 @@ export const CartProvider = ({children}) => {
                 receiveCartInfoFromServer,
                 addItem, 
                 removeItem,
-                changeQuantity
+                changeQuantity,
+                emptyCart
             }}}>
             {children}
         </CartContext.Provider>

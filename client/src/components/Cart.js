@@ -1,28 +1,35 @@
 import { useState, useEffect, useContext } from 'react';
+import { useNavigate } from "react-router-dom"
 import styled from "styled-components";
 import QuantityBtns from './QuantityBtns';
 import { CartContext } from "./CartContext";
 
-const Cart = ({userId}) => {
+const Cart = ({userId, setOrderId}) => {
     // enable/disable btns and input
     const [isFetching, setIsFetching] = useState(false);
     const {
         state, 
         actions: { 
             removeItem,
-            changeQuantity
+            changeQuantity,
+            emptyCart
         }
     } = useContext(CartContext);
+    const navigate = useNavigate();
 
     // calculating the numToBuy to send it to the BE
     const newNumToBuy = (e, itemId, action) => {
         let currNumToBuy = state.find(item => item.itemId === itemId).numToBuy;
         if (action === "plus") {
-            return currNumToBuy++
-        } else if (action === "minus" && currNumToBuy > 1) {
-            return currNumToBuy--
-        } else if (action === "input"){
+            currNumToBuy++
+            return currNumToBuy
+        } else if (action === "minus") {
             if (currNumToBuy > 1) {
+                currNumToBuy--
+            }
+            return currNumToBuy
+        } else if (action === "input"){
+            if (currNumToBuy > 0) {
                 return Number(e.target.value)
             } else {
                 return 1
@@ -53,9 +60,9 @@ const Cart = ({userId}) => {
                 window.alert(data.message);
             }
             })
-            .catch((error) => {
-                window.alert(error);
-            })
+        .catch((error) => {
+            window.alert(error);
+        })
     
     }
 
@@ -86,43 +93,72 @@ const Cart = ({userId}) => {
                 window.alert(error);
             })
     }
-
+    const handleBuy = () => {
+        setIsFetching(true);
+        fetch("/api/add-to-bought-items", {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "_id": userId
+            })
+        })
+        .then(res => res.json())
+        .then((data) => {
+            setIsFetching(false);
+            if (data.status === 201) {
+                setOrderId(data.data._id);
+                emptyCart();
+                navigate(`/confirmation`);
+            } else {
+                window.alert(data.message);
+            }
+            })
+            .catch((error) => {
+                window.alert(error);
+            })
+    }
 
     return (
         <>
-            {state && !isFetching
-                ?   <Wrapper>
+            <Wrapper>
+                {state.length === 0
+                ?   <h1>Cart is empty.</h1>
+                :   <>
                         <h1>Cart: </h1>
-                            <ol>
-                                {state.map((item, ind) => {
-                                    return (
-                                        <li key={item.itemId}>
-                                            <p>{item.name}</p>
-                                            <QuantityWrapper>
-                                                <span>QTY:</span>
-                                                <QuantityBtns 
-                                                    handleMinusClick={(e) => handleQuantityChange(e, item.itemId, "minus")} 
-                                                    handleInputChange={(e) => handleQuantityChange(e, item.itemId, "input")} 
-                                                    handlePlusClick={(e) => handleQuantityChange(e, item.itemId, "plus")} 
-                                                    itemQuantity={state[ind].numToBuy}
-                                                    disabled={isFetching}
-                                                />
-                                            </QuantityWrapper>
-                                            <PriceWrapper>
-                                                <span>Price: {item.price}</span>
-                                                <span>Total: ${Number(item.price.slice(1)) * state[ind].numToBuy}</span>
-                                            </PriceWrapper>
-                                            <RemoveBtn onClick={() => handleRemove(item.itemId)}>Remove</RemoveBtn>
-                                        </li>
-                                    )
-                                })}
-                            </ol>
-                            <div>
-                                <p>Total:</p>
-                                <p>${state.reduce((acc,item) => acc + Number(item.price.slice(1)) * item.numToBuy, 0)}</p>
-                            </div>
-                    </Wrapper>
-                : <h2>Loading...</h2>}
+                        <ol>
+                            {state.map((item, ind) => {
+                                return (
+                                    <li key={item.itemId}>
+                                        <p>{item.name}</p>
+                                        <QuantityWrapper>
+                                            <span>QTY:</span>
+                                            <QuantityBtns 
+                                                handleMinusClick={(e) => handleQuantityChange(e, item.itemId, "minus")} 
+                                                handleInputChange={(e) => handleQuantityChange(e, item.itemId, "input")} 
+                                                handlePlusClick={(e) => handleQuantityChange(e, item.itemId, "plus")} 
+                                                itemQuantity={state[ind].numToBuy}
+                                                disabled={isFetching}
+                                            />
+                                        </QuantityWrapper>
+                                        <PriceWrapper>
+                                            <span>Price: {item.price}</span>
+                                            <span>Total: ${(Number(item.price.slice(1)) * state[ind].numToBuy).toFixed(2)}</span>
+                                        </PriceWrapper>
+                                        <RemoveBtn onClick={() => handleRemove(item.itemId)}>Remove</RemoveBtn>
+                                    </li>
+                                )
+                            })}
+                        </ol>
+                        <div>
+                            <p>Total:</p>
+                            <p>${(state.reduce((acc,item) => acc + Number(item.price.slice(1)) * item.numToBuy, 0)).toFixed(2)}</p>
+                        </div>
+                        <button onClick={handleBuy} disabled={isFetching}>Buy</button>
+                    </>}
+            </Wrapper>
         </>
     )
 }
