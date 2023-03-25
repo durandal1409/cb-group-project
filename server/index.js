@@ -21,6 +21,8 @@ const {deleteBoughtItem} = require("./handlers/deleteBoughtItem")
 const {deleteConfirmation} = require("./handlers/deleteConfirmation");
 const { getBodyLocation } = require('./handlers/getBodyLocation');
 const { getPrices } = require('./handlers/getPrices');
+const { getCategories } = require('./handlers/getCategories');
+
 
 express()
   .use(function(req, res, next) {
@@ -54,7 +56,8 @@ express()
 
 .get("/api/get-bodylocation", getBodyLocation)
 .get("/api/get-prices", getPrices)
-.get("/api/get-categories", getCompanies)
+.get("/api/get-categories", getCategories)
+
 
 /// BodyLocation, Prices and Categories endpoints ///
 
