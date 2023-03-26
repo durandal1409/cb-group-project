@@ -1,42 +1,22 @@
-import { NavLink, Link, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import items from "../assets/items.json";
 import { useNavigate } from "react-router-dom";
 
-const Category = () => {
-  const [itemsArr, setItemArr] = useState([]);
-  const [locationArr, setLocationArr] = useState([]);
-  let { category } = useParams();
-  let [bodyLocation, setBodyLocation] = useState("");
+const Category = ({categoryClicked}) => {
+  const [itemsArr, setItemsArr] = useState(null);
+  const [filteredItems, setFilteredItems] = useState(null);
+  const [locationArr, setLocationArr] = useState(null);
+  const { category } = useParams();
+  const [bodyLocation, setBodyLocation] = useState(null);
   const navigate = useNavigate();
-  console.log(category);
 
   useEffect(() => {
     fetch(`/api/get-items`)
       .then((res) => res.json())
       .then((data) => {
         if (data.status === 200) {
-          let locations = [];
-          data.data.forEach((item) => {
-            if (!locations.includes(item.body_location)) {
-              locations.push(item.body_location);
-            }
-          });
-          locations.sort();
-          setLocationArr(locations);
-
-          const categoryArray = data.data
-            .filter((item) => {
-              return item.category == category;
-            })
-            .filter((item) => {
-              if (bodyLocation.length) {
-                return item.body_location == bodyLocation;
-              }
-              return true;
-            });
-          setItemArr(categoryArray);
+          setItemsArr(data.data);
         } else {
           window.alert(data.message);
           throw new Error(data.message);
@@ -46,7 +26,39 @@ const Category = () => {
         window.alert(error);
       })
     
-  }, [category, bodyLocation]);
+  }, []);
+  useEffect(() => {
+    fetch(`/api/get-bodylocation`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status === 200) {
+          setLocationArr(data.bodyLocations.map(obj => obj.name));
+        } else {
+          window.alert(data.message);
+          throw new Error(data.message);
+        }
+      })
+      .catch((error) => {
+        window.alert(error);
+      })
+  }, [])
+
+  // setting bodyLocation to null when category in Header has been clicked
+  useEffect(() => {
+    setBodyLocation(null);
+  }, [categoryClicked])
+
+  useEffect(() => {
+    // filtering only items from chosen category
+    if (itemsArr) {
+      setFilteredItems(itemsArr.filter(item => {
+        const isChosenBodyLocation = bodyLocation ? item.body_location === bodyLocation : true;
+        const isChosenCategory = item.category === category 
+        return isChosenBodyLocation && isChosenCategory
+      }));
+    }
+  }, [category, itemsArr, bodyLocation])
+  
 
   return (
     <Wrapper>
@@ -56,7 +68,6 @@ const Category = () => {
             return (
               <BLocation
                 onClick={() => {
-                  console.log(location);
                   setBodyLocation(location);
                 }}
                 key={location}
@@ -66,8 +77,8 @@ const Category = () => {
             );
           })}
       </Location>
-      {itemsArr && itemsArr.length ? (
-        itemsArr.map((categoryItem) => {
+      {filteredItems && filteredItems.length ? (
+        filteredItems.map((categoryItem) => {
           return (
             <DiscoverItem
               to={`/item/${categoryItem._id}`}

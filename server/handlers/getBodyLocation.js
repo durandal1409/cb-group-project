@@ -18,10 +18,10 @@ const getBodyLocation = async (req, res) => {
     await client.connect();
     const db = client.db("GroupProject");
     const result = await db.collection("BodyLocation").find().toArray()
-    res.status(200).json({bodyLocations: result });
+    res.status(200).json({status: 200, bodyLocations: result });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message : "Files not found"})
+    res.status(500).json({ status: 500, message : "Files not found"})
   }
   client.close();
 };
