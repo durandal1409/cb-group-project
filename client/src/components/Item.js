@@ -99,18 +99,17 @@ const Item = ({ userId }) => {
       if (itemQuantity > 1) {
         setItemQuantity(itemQuantity - 1);
       }
-    } else if (action === "input"){
+    } else if (action === "input") {
       if (e.target.value > 0) {
         setItemQuantity(Number(e.target.value));
       } else {
         setItemQuantity(1);
       }
     }
-      
   };
   const handleCompanyClick = (e) => {
     navigate(`/company-profile/${companyData._id}`);
-}
+  };
 
   return (
     <Wrapper>
@@ -143,7 +142,9 @@ const Item = ({ userId }) => {
         <Location onClick={handleCompanyClick}>
           <h3>Seller: </h3>
           <p>{companyData.name}</p>
-          <a href={companyData.url} onClick={e => e.stopPropagation()}>{companyData.url}</a>
+          <a href={companyData.url} onClick={(e) => e.stopPropagation()}>
+            {companyData.url}
+          </a>
           <p>Country: {companyData.country}</p>
         </Location>
       ) : (
@@ -196,11 +197,13 @@ const ButtonCart = styled.button`
   font-weight: bold;
   transition: 0.5s ease-in-out;
   background-color: var(--color-background);
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
-    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
-    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  border-style: solid;
+  border-width: 1px;
+
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   :hover {
-    transform: translateY(1px);
+    color: rgb(71, 103, 161);
+    transform: translateY(2px);
   }
   :after {
     content: "";
@@ -209,7 +212,7 @@ const ButtonCart = styled.button`
     position: absolute;
     top: 0;
     left: 0;
-    /* width: 100%; */
+    /* width: 100%;*/
     height: 100%;
     transition: 1s all;
     opacity: 0;
@@ -240,7 +243,7 @@ const Location = styled.div`
   cursor: pointer;
   transition: 0.5s ease-in-out;
   :hover {
-    transform: translateY(10px);
+    transform: translateY(2px);
   }
   h3 {
     font-size: 25px;

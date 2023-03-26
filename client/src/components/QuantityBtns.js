@@ -1,16 +1,36 @@
 import styled from "styled-components";
 
-const QuantityBtns = ({handleQuantityChange, itemQuantity, disabled, itemId}) => {
-    return (
-        <Wrapper>
-            <ButtonDiv>
-                <Button disabled={disabled} onClick={(e) => handleQuantityChange(e, "minus", itemId)}>-</Button>
-                <Number disabled={disabled} type="number" value={itemQuantity} onChange={(e) => handleQuantityChange(e, "input", itemId)} />
-                <Button disabled={disabled} onClick={(e) => handleQuantityChange(e, "plus", itemId)}>+</Button>
-            </ButtonDiv>
-        </Wrapper>
-    )
-}
+const QuantityBtns = ({
+  handleQuantityChange,
+  itemQuantity,
+  disabled,
+  itemId,
+}) => {
+  return (
+    <Wrapper>
+      <ButtonDiv>
+        <Button
+          disabled={disabled}
+          onClick={(e) => handleQuantityChange(e, "minus", itemId)}
+        >
+          -
+        </Button>
+        <Number
+          disabled={disabled}
+          type="number"
+          value={itemQuantity}
+          onChange={(e) => handleQuantityChange(e, "input", itemId)}
+        />
+        <Button
+          disabled={disabled}
+          onClick={(e) => handleQuantityChange(e, "plus", itemId)}
+        >
+          +
+        </Button>
+      </ButtonDiv>
+    </Wrapper>
+  );
+};
 
 const Wrapper = styled.div`
   display: flex;
@@ -19,15 +39,13 @@ const Wrapper = styled.div`
   align-items: center;
   height: 5vh;
   width: 27vh;
-  border-radius: 15px;
+  border-radius: 5px;
   background-color: var(--color-background);
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
-    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
-    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  border-width: 1px;
+  border-style: solid;
 `;
 const Number = styled.input`
-  /* display: flex;
-  align-items: center; */
   font-size: 20px;
   border-left: 2px solid #f5f5f5;
   border-right: 2px solid #f5f5f5;
@@ -54,9 +72,8 @@ const Button = styled.button`
   padding: 0px 15px;
   :hover {
     background-color: #bfbfbf;
-    border-radius: 15px;
+    border-radius: 5px;
   }
 `;
-
 
 export default QuantityBtns;
