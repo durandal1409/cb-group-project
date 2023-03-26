@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { AiOutlineUser } from "react-icons/ai";
 
