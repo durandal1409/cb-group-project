@@ -6,7 +6,7 @@ import { AiOutlineUser } from "react-icons/ai";
 import { AiOutlineSearch } from "react-icons/ai";
 import items from "../assets/items.json";
 
-const Header = ({categoryClicked, setCategoryClicked}) => {
+const Header = ({setBodyLocation}) => {
   const [itemsCategory, setItemsCategory] = useState([]);
 
   useEffect(() => {
@@ -48,7 +48,7 @@ const Header = ({categoryClicked, setCategoryClicked}) => {
                   <Anchor 
                     to={`/category/${category}`}
                     // need to lift the state to make Category refresh items when header has been clicked
-                    onClick={() => setCategoryClicked(!categoryClicked)}
+                    onClick={() => setBodyLocation(null)}
                   >
                     {category}
                   </Anchor>

@@ -20,7 +20,7 @@ function App() {
   } = useContext(CartContext);
   const [orderId, setOrderId] = useState(null);
   // need to lift the state here to make Category refresh items when header has been clicked
-  const [categoryClicked, setCategoryClicked] = useState();
+  const [bodyLocation, setBodyLocation] = useState(null);
 
   useEffect(() => {
     fetch(`/api/get-cart/${userId}`)
@@ -45,11 +45,11 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <GlobalStyles />
-        <Header categoryClicked={categoryClicked} setCategoryClicked={setCategoryClicked}/>
+        <Header setBodyLocation={setBodyLocation}/>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/item/:itemId" element={<Item userId={userId} />} />
-          <Route path="/category/:category" element={<Category  categoryClicked={categoryClicked} />}/>
+          <Route path="/category/:category" element={<Category  bodyLocation={bodyLocation} setBodyLocation={setBodyLocation} />}/>
           <Route path="/company-profile/:companyId" element={<Profile />} />
           <Route path="/cart" element={<Cart userId={userId} setOrderId={setOrderId}/>} />
           <Route path="/confirmation" element={<Confirmation orderId={orderId}/>} />
