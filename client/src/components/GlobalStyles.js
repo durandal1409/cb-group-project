@@ -5,7 +5,7 @@ export default createGlobalStyle`
     --color-blackfont-text:#000000;
     --color-background:#F5F5F5;
     //--color-background:#fefdfc;
-    //--color-background:white;
+    //--color-background:white.;
     --Font-heading-title:"Teko","sans-serif";
     --font-text:"Cormorant Garamond", "sans-serif"; 
     
