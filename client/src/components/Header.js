@@ -4,32 +4,26 @@ import { NavLink, Link } from "react-router-dom";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { AiOutlineUser } from "react-icons/ai";
 import { AiOutlineSearch } from "react-icons/ai";
-import items from "../assets/items.json";
 
 const Header = ({setBodyLocation}) => {
   const [itemsCategory, setItemsCategory] = useState([]);
 
   useEffect(() => {
-    /* fetch("")
+    fetch(`/api/get-categories`)
       .then((res) => res.json())
       .then((data) => {
-        setItemsCategory(data.data);
-        console.log(data);
+        if (data.status === 200) {
+          const categories = data.Categories.map(obj => obj.category)
+          setItemsCategory(categories.sort());
+        } else {
+          window.alert(data.message);
+          throw new Error(data.message);
+        }
       })
       .catch((error) => {
-        console.log(error);
-      });
-    */
-
-    let categories = [];
-    items.forEach((item) => {
-      if (!categories.includes(item.category)) {
-        categories.push(item.category);
-      }
-    });
-    categories.sort();
-    setItemsCategory(categories);
-  }, []);
+        window.alert(error);
+      })
+  }, [])
 
   return (
     <div>
