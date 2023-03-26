@@ -3,12 +3,12 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
-const Category = ({categoryClicked}) => {
+const Category = ({bodyLocation, setBodyLocation}) => {
   const [itemsArr, setItemsArr] = useState(null);
   const [filteredItems, setFilteredItems] = useState(null);
   const [locationArr, setLocationArr] = useState(null);
   const { category } = useParams();
-  const [bodyLocation, setBodyLocation] = useState(null);
+  
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -42,11 +42,6 @@ const Category = ({categoryClicked}) => {
         window.alert(error);
       })
   }, [])
-
-  // setting bodyLocation to null when category in Header has been clicked
-  useEffect(() => {
-    setBodyLocation(null);
-  }, [categoryClicked])
 
   useEffect(() => {
     // filtering only items from chosen category
