@@ -18,10 +18,10 @@ const getCategories = async (req, res) => {
     await client.connect();
     const db = client.db("GroupProject")
     const result = await db.collection("Categories").find().toArray();
-    res.status(200).json({Categories: result });
+    res.status(200).json({status: 200, Categories: result });
   } catch (err) {
     console.log(err);
-    res.status(500).json({message: "Categories not found"})
+    res.status(500).json({status: 500, message: "Categories not found"})
   }
   client.close();
 };
