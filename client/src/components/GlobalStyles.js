@@ -26,4 +26,13 @@ a{
   text-decoration: none;
   color: currentColor;
 }
+
+.active {
+  color: rgb(71, 103, 161);
+  box-shadow: rgba(245, 245, 245, 10) 0px 5px,
+      rgba(245, 245, 245, 10) 0px 10px, rgba(245, 245, 245, 10) 0px 15px,
+      rgba(245, 245, 245, 10) 0px 20px, rgba(245, 245, 245, 10) 0px 25px,
+      rgba(0, 102, 255, 0.4) 0px 30px;
+}
+
 `;

@@ -28,41 +28,41 @@ const Header = ({ setBodyLocation }) => {
     <div>
       <Wrapper>
         <UList>
-          <List>
+          <Nav>
             <AnchorTitle to={"/"}>AllStar</AnchorTitle>
-          </List>
+          </Nav>
         </UList>
-
-        <UlCategories>
+        <DivCategories>
           {itemsCategory ?
             itemsCategory.map((category) => {
               return (
-                <List key={category}>
+                <Nav key={category}>
                   <Anchor
+                    activeClassName="active"
                     to={`/category/${category}`}
                     // need to lift the state to make Category refresh items when header has been clicked
                     onClick={() => setBodyLocation(null)}
                   >
                     {category}
                   </Anchor>
-                </List>
+                </Nav>
               );
             })
             : <h1>Loading categories...</h1>
             }
-        </UlCategories>
+        </DivCategories>
 
         <UserList>
-          <List>
-            <Anchor to={"/"}>
+          <Nav>
+            <Anchor to={"/user"}>
               <AiOutlineUser />
             </Anchor>
-          </List>
-          <List>
+          </Nav>
+          <Nav>
             <Anchor to={"/cart"}>
               <AiOutlineShoppingCart />
             </Anchor>
-          </List>
+          </Nav>
         </UserList>
       </Wrapper>
     </div>
@@ -74,7 +74,7 @@ const Wrapper = styled.div`
   align-items: center;
   box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
 `;
-const UList = styled.ul`
+const UList = styled.div`
   width: 100%;
   padding: 25px;
   font-family: var(--font-text);
@@ -85,12 +85,12 @@ const UList = styled.ul`
   justify-content: flex-start;
   background-color: var(--color-background);
 `;
-const UlCategories = styled(UList)`
+const DivCategories = styled(UList)`
   word-wrap: break-word;
   flex-direction: row;
   font-size: 20px;
   justify-content: center;
-  & li a {
+  & nav a {
     width: max-content;
   }
 `;
@@ -105,24 +105,27 @@ const UserList = styled.ul`
   justify-content: flex-end;
   background-color: var(--color-background);
 `;
-const List = styled.li`
+const Nav = styled.nav`
   display: flex;
   line-height: 35px;
   align-items: center;
   padding: 10px 15px;
   list-style-type: none;
+  & {
+    width: max-content;
+  }
 `;
-const Anchor = styled(Link)`
+const Anchor = styled(NavLink)`
   display: flex;
   text-decoration: none;
   color: white;
+  width: max-content;
   color: var(--color-blackfont-text);
   &:hover {
     color: rgb(71, 103, 161);
-    box-shadow: rgba(245, 245, 245, 10) 0px 5px,
-      rgba(245, 245, 245, 10) 0px 10px, rgba(245, 245, 245, 10) 0px 15px,
-      rgba(245, 245, 245, 10) 0px 20px, rgba(245, 245, 245, 10) 0px 25px,
-      rgba(1, 2, 3, 0.4) 0px 30px;
+    box-shadow: rgba(245, 245, 245, 10) 0px 5px, rgba(245, 245, 245, 1) 0px 10px,
+      rgba(245, 245, 245, 1) 0px 15px, rgba(245, 245, 245, 1) 0px 20px,
+      rgba(245, 245, 245, 1) 0px 25px, rgba(0, 102, 255, 0.4) 0px 30px;
   }
 `;
 const AnchorTitle = styled(Link)`
