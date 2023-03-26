@@ -3,9 +3,8 @@ import styled from "styled-components";
 import { NavLink, Link } from "react-router-dom";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { AiOutlineUser } from "react-icons/ai";
-import { AiOutlineSearch } from "react-icons/ai";
 
-const Header = ({setBodyLocation}) => {
+const Header = ({ setBodyLocation }) => {
   const [itemsCategory, setItemsCategory] = useState([]);
 
   useEffect(() => {
@@ -13,7 +12,7 @@ const Header = ({setBodyLocation}) => {
       .then((res) => res.json())
       .then((data) => {
         if (data.status === 200) {
-          const categories = data.Categories.map(obj => obj.category)
+          const categories = data.Categories.map((obj) => obj.category);
           setItemsCategory(categories.sort());
         } else {
           window.alert(data.message);
@@ -22,8 +21,8 @@ const Header = ({setBodyLocation}) => {
       })
       .catch((error) => {
         window.alert(error);
-      })
-  }, [])
+      });
+  }, []);
 
   return (
     <div>
@@ -39,7 +38,7 @@ const Header = ({setBodyLocation}) => {
             itemsCategory.map((category) => {
               return (
                 <List key={category}>
-                  <Anchor 
+                  <Anchor
                     to={`/category/${category}`}
                     // need to lift the state to make Category refresh items when header has been clicked
                     onClick={() => setBodyLocation(null)}
@@ -52,14 +51,6 @@ const Header = ({setBodyLocation}) => {
         </UlCategories>
 
         <UserList>
-          <List>
-            <Anchor to={"/"}>
-              <AiOutlineSearch />
-            </Anchor>
-          </List>
-          <List>
-            <Anchor to={"/"}>UserName</Anchor>
-          </List>
           <List>
             <Anchor to={"/"}>
               <AiOutlineUser />
@@ -86,7 +77,7 @@ const UList = styled.ul`
   padding: 25px;
   font-family: var(--font-text);
   font-weight: bold;
-  font-size: 18px;
+  font-size: 17px;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -95,6 +86,7 @@ const UList = styled.ul`
 const UlCategories = styled(UList)`
   word-wrap: break-word;
   flex-direction: row;
+  font-size: 20px;
   justify-content: center;
   & li a {
     width: max-content;
@@ -103,13 +95,12 @@ const UlCategories = styled(UList)`
 const UserList = styled.ul`
   display: flex;
   width: 100%;
-  padding: 25px;
+  padding: 26px 25px;
   font-family: var(--font-text);
   font-weight: bold;
-  font-size: 17px;
+  font-size: 32px;
   align-items: center;
   justify-content: flex-end;
-
   background-color: var(--color-background);
 `;
 const List = styled.li`
@@ -124,7 +115,8 @@ const Anchor = styled(Link)`
   text-decoration: none;
   color: white;
   color: var(--color-blackfont-text);
-  :hover {
+  &:hover {
+    color: rgb(71, 103, 161);
     box-shadow: rgba(245, 245, 245, 10) 0px 5px,
       rgba(245, 245, 245, 10) 0px 10px, rgba(245, 245, 245, 10) 0px 15px,
       rgba(245, 245, 245, 10) 0px 20px, rgba(245, 245, 245, 10) 0px 25px,
@@ -139,6 +131,9 @@ const AnchorTitle = styled(Link)`
   color: white;
   color: var(--color-blackfont-text);
   letter-spacing: 0.5rem;
+  &:hover {
+    color: rgb(71, 103, 161);
+  }
 `;
 
 export default Header;
