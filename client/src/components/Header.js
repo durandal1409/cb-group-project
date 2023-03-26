@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { NavLink, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { AiOutlineUser } from "react-icons/ai";
 
 const Header = ({ setBodyLocation }) => {
-  const [itemsCategory, setItemsCategory] = useState([]);
+  const [itemsCategory, setItemsCategory] = useState(null);
 
   useEffect(() => {
     fetch(`/api/get-categories`)
@@ -34,7 +34,7 @@ const Header = ({ setBodyLocation }) => {
         </UList>
 
         <UlCategories>
-          {itemsCategory &&
+          {itemsCategory ?
             itemsCategory.map((category) => {
               return (
                 <List key={category}>
@@ -47,7 +47,9 @@ const Header = ({ setBodyLocation }) => {
                   </Anchor>
                 </List>
               );
-            })}
+            })
+            : <h1>Loading categories...</h1>
+            }
         </UlCategories>
 
         <UserList>
