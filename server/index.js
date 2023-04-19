@@ -2,8 +2,9 @@
 
 const express = require('express');
 const morgan = require('morgan');
-
-const PORT = 4000;
+const cors = require("cors");
+require("dotenv").config();
+const port = process.env.PORT || 8000;
 
 const {getItems} = require("./handlers/getItems")
 const {getItem} = require("./handlers/getItem")
@@ -41,6 +42,7 @@ express()
   .use(express.json())
   .use(express.urlencoded({ extended: false }))
   .use('/', express.static(__dirname + '/'))
+  .use(cors())
 
   // REST endpoints?
   .get("/api/get-items", getItems)
@@ -79,4 +81,4 @@ express()
     });
   })
 
-  .listen(PORT, () => console.info(`Listening on port ${PORT}`));
+  .listen(port, () => console.info(`Listening on port ${port}`));
