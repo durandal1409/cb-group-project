@@ -10,7 +10,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`/api/get-items`)
+    fetch(`${process.env.REACT_APP_BASE_URL}/api/get-items`)
       .then((res) => res.json())
       .then((data) => {
         if (data.status === 200) {

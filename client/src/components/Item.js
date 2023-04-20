@@ -21,7 +21,7 @@ const Item = ({ userId }) => {
   // fetching item data
   // and after that fetch company with the companyId from item
   const fetchItemAndCompany = async () => {
-    const item = await fetch(`/api/get-item/${itemId}`).then((res) =>
+    const item = await fetch(`${process.env.REACT_APP_BASE_URL}/api/get-item/${itemId}`).then((res) =>
       res.json()
     );
     if (item.status !== 200) {
@@ -29,7 +29,7 @@ const Item = ({ userId }) => {
       throw new Error(item.message);
     }
     setItemData(item.data);
-    const company = await fetch(`/api/get-company/${item.data.companyId}`).then(
+    const company = await fetch(`${process.env.REACT_APP_BASE_URL}/api/get-company/${item.data.companyId}`).then(
       (res) => res.json()
     );
     if (company.status !== 200) {
@@ -54,7 +54,7 @@ const Item = ({ userId }) => {
     }
     // disable btns
     setIsFetching(true);
-    fetch("/api/add-to-cart", {
+    fetch(`${process.env.REACT_APP_BASE_URL}/api/add-to-cart`, {
       method: "POST",
       headers: {
         Accept: "application/json",

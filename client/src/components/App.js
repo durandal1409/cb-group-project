@@ -23,7 +23,7 @@ function App() {
   const [bodyLocation, setBodyLocation] = useState(null);
 
   useEffect(() => {
-    fetch(`/api/get-cart/${userId}`)
+    fetch(`${process.env.REACT_APP_BASE_URL}/api/get-cart/${userId}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.status === 200) {

@@ -38,7 +38,7 @@ const Cart = ({ userId, setOrderId }) => {
   const handleQuantityChange = (e, action, itemId) => {
     setIsFetching(true);
     const numToBuy = newNumToBuy(e, itemId, action);
-    fetch("/api/update-cart", {
+    fetch(`${process.env.REACT_APP_BASE_URL}/api/update-cart`, {
       method: "PATCH",
       headers: {
         Accept: "application/json",
@@ -69,7 +69,7 @@ const Cart = ({ userId, setOrderId }) => {
   const handleRemove = (itemId) => {
     setIsFetching(true);
 
-    fetch("/api/delete-cart-item", {
+    fetch(`${process.env.REACT_APP_BASE_URL}/api/delete-cart-item`, {
       method: "DELETE",
       headers: {
         Accept: "application/json",
@@ -99,7 +99,7 @@ const Cart = ({ userId, setOrderId }) => {
   // and navigating to confirmation page
   const handleBuy = () => {
     setIsFetching(true);
-    fetch("/api/add-to-bought-items", {
+    fetch(`${process.env.REACT_APP_BASE_URL}/api/add-to-bought-items`, {
       method: "POST",
       headers: {
         Accept: "application/json",

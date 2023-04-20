@@ -5,7 +5,7 @@ const Confirmation = ({ orderId }) => {
   const [order, setOrder] = useState(null);
 
   useEffect(() => {
-    fetch(`/api/get-bought-items/${orderId}`)
+    fetch(`${process.env.REACT_APP_BASE_URL}/api/get-bought-items/${orderId}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.status !== 200) {

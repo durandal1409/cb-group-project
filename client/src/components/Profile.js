@@ -9,7 +9,7 @@ const Profile = () => {
   const [items, setItems] = useState(null);
 
   useEffect(() => {
-    fetch(`/api/get-company/${companyId}`)
+    fetch(`${process.env.REACT_APP_BASE_URL}/api/get-company/${companyId}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.status !== 200) {
@@ -21,7 +21,7 @@ const Profile = () => {
   }, []);
 
   useEffect(() => {
-    fetch(`/api/get-company-items/${companyId}`)
+    fetch(`${process.env.REACT_APP_BASE_URL}/api/get-company-items/${companyId}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.status !== 200) {

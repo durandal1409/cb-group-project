@@ -8,7 +8,7 @@ const Header = ({ setBodyLocation }) => {
   const [itemsCategory, setItemsCategory] = useState(null);
 
   useEffect(() => {
-    fetch(`/api/get-categories`)
+    fetch(`${process.env.REACT_APP_BASE_URL}/api/get-categories`)
       .then((res) => res.json())
       .then((data) => {
         if (data.status === 200) {

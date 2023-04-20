@@ -12,7 +12,7 @@ const Category = ({bodyLocation, setBodyLocation}) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`/api/get-items`)
+    fetch(`${process.env.REACT_APP_BASE_URL}/api/get-items`)
       .then((res) => res.json())
       .then((data) => {
         if (data.status === 200) {
@@ -28,7 +28,7 @@ const Category = ({bodyLocation, setBodyLocation}) => {
     
   }, []);
   useEffect(() => {
-    fetch(`/api/get-bodylocation`)
+    fetch(`${process.env.REACT_APP_BASE_URL}/api/get-bodylocation`)
       .then((res) => res.json())
       .then((data) => {
         if (data.status === 200) {
